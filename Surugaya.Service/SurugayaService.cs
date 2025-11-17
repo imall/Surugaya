@@ -36,11 +36,15 @@ public class SurugayaService(SurugayaRepository repo,SurugayaDetailsRepository d
     {
         var dto = await repo.GetAllSurugayaAsync();
 
-        return dto.Select(x => new SurugayaModel()
+        return dto.Select(x =>
         {
-            Id = int.Parse(x.ProductUrl.Split("/").Last()),
-            ProductUrl = x.ProductUrl,
-            CreateAt = x.CreatedAt
+            var uri = new Uri(x.ProductUrl);
+            return new SurugayaModel()
+            {
+                Id = int.Parse(uri.Segments.Last()),
+                ProductUrl = x.ProductUrl,
+                CreateAt = x.CreatedAt
+            };
         });
     }
     
