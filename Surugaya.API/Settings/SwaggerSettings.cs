@@ -35,8 +35,13 @@ public static class SwaggerSettings
     /// <summary>
     /// Swagger 中介軟體設定
     /// </summary>
-    public static void UseSwaggerSettings(this WebApplication app)
+    public static void UseSwaggerSettings(this WebApplication app, bool isProduction)
     {
+        if (isProduction)
+        {
+            return;
+        }
+
         app.UseSwagger();
 
         app.UseSwaggerUI(setupAction =>

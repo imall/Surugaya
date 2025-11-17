@@ -7,7 +7,12 @@ using Surugaya.Service.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var productionEnvList = new HashSet<string>(
+    ["AwsRelease", "Release", "Production"],
+    StringComparer.OrdinalIgnoreCase
+);
+
+var isProduction = productionEnvList.Contains(builder.Environment.EnvironmentName);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -54,7 +59,7 @@ builder.Services.AddScoped<SurugayaDetailsService>();
 var app = builder.Build();
 
 
-app.UseSwaggerSettings();
+app.UseSwaggerSettings(isProduction);
 
 
 app.UseHttpsRedirection();
