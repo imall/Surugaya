@@ -1,0 +1,30 @@
+name: Keep Render Alive
+
+on:
+  schedule:
+    # 每 14 分鐘執行一次 (避免 Render 15 分鐘休眠)
+    - cron: '*/14 * * * *'
+  workflow_dispatch:  # 允許手動觸發
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Ping Render Service
+        run: |
+          echo "🚀 Pinging Render service..."
+          
+          # 嘗試 ping 主要端點
+          if curl -f -s -o /dev/null -w "%{http_code}" https://surugaya.onrender.com; then
+            echo "✅ Service is alive!"
+          else
+            echo "⚠️ Service might be down"
+          fi
+          
+          echo "⏰ Ping completed at $(date)"
+      
+      - name: Ping Swagger (backup)
+        run: |
+          echo "📄 Checking Swagger endpoint..."
+          curl -f https://surugaya.onrender.com/swagger || echo "Swagger check completed"
