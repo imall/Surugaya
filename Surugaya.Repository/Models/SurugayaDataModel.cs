@@ -8,6 +8,7 @@ namespace Surugaya.Repository.Models;
 public class SurugayaDataModel : BaseModel
 {
     [PrimaryKey("productUrl", false)]
+    [Column("productUrl")]
     public string ProductUrl { get; set; } = string.Empty;
 
     [Column("created_at")]

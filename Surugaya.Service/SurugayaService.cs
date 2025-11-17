@@ -9,7 +9,7 @@ namespace Surugaya.Service;
 /// 處理網址
 /// </summary>
 /// <param name="repo"></param>
-public class SurugayaService(SupabaseRepository repo, SurugayaScraperService service)
+public class SurugayaService(SurugayaRepository repo,SurugayaDetailsRepository detailsRepository, SurugayaScraperService service)
 {
     public async Task<SurugayaDetailModel> InsertSurugayaAsync(CreateSurugayaParameter parameter)
     {
@@ -38,34 +38,15 @@ public class SurugayaService(SupabaseRepository repo, SurugayaScraperService ser
 
         return dto.Select(x => new SurugayaModel()
         {
+            Id = int.Parse(x.ProductUrl.Split("/").Last()),
             ProductUrl = x.ProductUrl,
             CreateAt = x.CreatedAt
         });
     }
-
-    public async Task<SurugayaModel> GetSurugayaByUrlAsync(string url)
-    {
-        var dto = await repo.GetSurugayaByUrlAsync(url);
-
-        if (dto == null)
-        {
-            throw new Exception("找不到指定 ID 的資料。");
-        }
-
-        return new SurugayaModel()
-        {
-            ProductUrl = dto.ProductUrl,
-            CreateAt = dto.CreatedAt
-        };
-    }
-
-    public async Task<bool> IsUrlExistAsync(string url)
-    {
-        return await repo.IsUrlExistAsync(url);
-    }
     
-    public async Task DeleteFromUrlAsync(string url)
+    public async Task DeleteFromIdAsync(int id)
     {
-        await repo.DeleteFromUrlAsync(url);
+        await repo.DeleteFromIdAsync(id);
+        await detailsRepository.DeleteFromIdAsync(id);
     }
 }

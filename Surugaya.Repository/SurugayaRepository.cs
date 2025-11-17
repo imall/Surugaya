@@ -4,7 +4,7 @@ using Surugaya.Repository.Models;
 
 namespace Surugaya.Repository;
 
-public class SupabaseRepository(Client supabaseClient)
+public class SurugayaRepository(Client supabaseClient)
 {
     public async Task<SurugayaDataModel> InsertSurugayaAsync(SurugayaDataModel surugayaDataModel)
     {
@@ -75,10 +75,17 @@ public class SupabaseRepository(Client supabaseClient)
         }
     }
 
-    public async Task DeleteFromUrlAsync(string url)
+    /// <summary>
+    /// 透過 id 刪除資料
+    /// </summary>
+    /// <param name="id">駿河屋的商品 Id</param>
+    public async Task DeleteFromIdAsync(int id)
     {
         try
         {
+
+            var url = $"{ProjectConst.BaseUrl}/{id}";
+            
             await supabaseClient
                 .From<SurugayaDataModel>()
                 .Where(x => x.ProductUrl == url)

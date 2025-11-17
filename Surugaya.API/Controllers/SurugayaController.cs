@@ -52,36 +52,18 @@ public class SurugayaController(SurugayaService service, ILogger<SurugayaControl
         }
     }
     
+
+
     /// <summary>
-    /// 確認url是否存在
+    /// 透過駿河屋商品 id 刪除資料
     /// </summary>
-    /// <param name="url">商品網址</param>
-    /// <returns></returns>
-    [HttpGet("isUrlExist")]
-    public async Task<ActionResult<bool>> IsUrlExist(string url)
+    /// <param name="id">商品 id</param>
+    [HttpDelete("{id:int}")]
+    public async Task DeleteFromUrl(int id)
     {
         try
         {
-            var result = await service.IsUrlExistAsync(url);
-
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { error = $"判斷資料【{url}】存在與否時發生錯誤", message = ex.Message });
-        }
-    }
-
-    /// <summary>
-    /// 透過 url 刪除資料
-    /// </summary>
-    /// <param name="url">商品網址</param>
-    [HttpDelete("{url}")]
-    public async Task DeleteFromId(string url)
-    {
-        try
-        {
-            await service.DeleteFromUrlAsync(url);
+            await service.DeleteFromIdAsync(id);
         }
         catch (Exception ex)
         {

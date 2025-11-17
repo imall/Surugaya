@@ -9,7 +9,7 @@ namespace Surugaya.Service;
 /// <summary>
 /// 爬蟲服務
 /// </summary>
-public class SurugayaScraperService(SupabaseRepository repo, SurugayaDetailsRepository detailRepo, ScraperUtil scraper)
+public class SurugayaScraperService(SurugayaRepository repo, SurugayaDetailsRepository detailRepo, ScraperUtil scraper)
 {
     public async Task<SurugayaDetailModel> ScrapeProductInfoByUrl(string url)
     {

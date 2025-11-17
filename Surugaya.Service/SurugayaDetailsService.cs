@@ -3,7 +3,7 @@ using Surugaya.Repository;
 
 namespace Surugaya.Service;
 
-public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository , SupabaseRepository repository)
+public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository , SurugayaRepository repository)
 {
 
     public async Task<IEnumerable<SurugayaDetailModel>> GetAllInUrlAsync()
