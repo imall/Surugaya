@@ -1,5 +1,6 @@
 using Supabase;
 using Surugaya.API.Configuration;
+using Surugaya.API.Services;
 using Surugaya.API.Settings;
 using Surugaya.Repository;
 using Surugaya.Service;
@@ -13,7 +14,7 @@ var productionEnvList = new HashSet<string>(
 );
 
 var isProduction = productionEnvList.Contains(builder.Environment.EnvironmentName);
-
+builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -22,6 +23,10 @@ builder.Services.AddSwaggerSettings();
 // 配置 Supabase 設定
 builder.Services.Configure<SupabaseSettings>(
     builder.Configuration.GetSection("Supabase"));
+
+// 配置駿河屋爬蟲設定
+builder.Services.Configure<SurugayaScraperSettings>(
+    builder.Configuration.GetSection("SurugayaScraper"));
 
 // 配置 Supabase
 builder.Services.AddSingleton<Client>(provider =>
@@ -56,9 +61,12 @@ builder.Services.AddScoped<ScraperUtil>();
 builder.Services.AddScoped<SurugayaScraperService>();
 builder.Services.AddScoped<SurugayaDetailsService>();
 
+// 註冊背景服務
+builder.Services.AddHostedService<SurugayaScraperBackgroundService>();
+
 var app = builder.Build();
 
-
+app.UseHealthChecks("/health");
 app.UseSwaggerSettings(isProduction);
 
 
