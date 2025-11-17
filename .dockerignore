@@ -1,0 +1,44 @@
+# .NET 建置輸出
+**/bin/
+**/obj/
+
+# Visual Studio 暫存檔案
+**/.vs/
+**/.vscode/
+*.user
+*.suo
+*.cache
+
+# JetBrains Rider
+**/.idea/
+*.sln.iml
+
+# OS 產生的檔案
+.DS_Store
+Thumbs.db
+
+# 版本控制
+.git/
+.gitignore
+
+# Docker 檔案
+Dockerfile*
+.dockerignore
+
+# 日誌檔案
+*.log
+
+# 暫存目錄
+**/temp/
+**/tmp/
+
+# NuGet 套件
+*.nupkg
+
+# 測試結果
+**/TestResults/
+**/*.trx
+
+# 其他
+*.md
+LICENSE
