@@ -4,6 +4,9 @@ using Surugaya.Service;
 
 namespace Surugaya.API.Controllers;
 
+/// <summary>
+/// 處理完成的願望清單資料 
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class SurugayaDetailsController(SurugayaDetailsService service, ILogger<SurugayaController> logger) : ControllerBase

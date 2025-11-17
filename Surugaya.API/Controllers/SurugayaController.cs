@@ -5,10 +5,8 @@ using Surugaya.Service;
 namespace Surugaya.API.Controllers;
 
 /// <summary>
-/// 管理 url 的 controller
+/// 紀錄願望清單 Url 
 /// </summary>
-/// <param name="service"></param>
-/// <param name="logger"></param>
 [ApiController]
 [Route("api/[controller]")]
 public class SurugayaController(SurugayaService service, ILogger<SurugayaController> logger) : ControllerBase

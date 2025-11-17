@@ -5,16 +5,15 @@ using Surugaya.Service;
 namespace Surugaya.API.Controllers;
 
 /// <summary>
-/// 爬蟲 api
+/// 整理詳細資料
 /// </summary>
-/// <param name="service"></param>
 [ApiController]
 [Route("api/[controller]")]
-public class SurugayaScraperController(SurugayaService service,SurugayaScraperService scraperService) : ControllerBase
+public class SurugayaScraperController(SurugayaScraperService scraperService) : ControllerBase
 {
     
     /// <summary>
-    /// 爬取所有 Surugaya 商品資訊，並寫入資料庫
+    /// 讀取已記錄的願望清單 url ，並寫入資料庫
     /// </summary>
     /// <returns>商品資訊列表</returns>
     [HttpGet("scrape-products")]

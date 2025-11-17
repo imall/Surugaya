@@ -1,5 +1,6 @@
 using Supabase;
 using Surugaya.API.Configuration;
+using Surugaya.API.Settings;
 using Surugaya.Repository;
 using Surugaya.Service;
 using Surugaya.Service.Utils;
@@ -11,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerSettings();
 
 // 配置 Supabase 設定
 builder.Services.Configure<SupabaseSettings>(
@@ -53,8 +54,7 @@ builder.Services.AddScoped<SurugayaDetailsService>();
 var app = builder.Build();
 
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerSettings();
 
 
 app.UseHttpsRedirection();
