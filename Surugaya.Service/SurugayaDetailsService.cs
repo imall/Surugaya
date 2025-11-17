@@ -16,6 +16,7 @@ public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository 
 
         return details.Select(x => new SurugayaDetailModel
         {
+            Id = int.Parse(x.Url.Split("/").Last()),
             Url = x.Url,
             Title = x.Title,
             ImageUrl = x.ImageUrl,
