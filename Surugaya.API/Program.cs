@@ -15,6 +15,50 @@ var productionEnvList = new HashSet<string>(
 
 var isProduction = productionEnvList.Contains(builder.Environment.EnvironmentName);
 builder.Services.AddHealthChecks();
+// 配置 CORS
+var corsSettings = new CorsSettings();
+builder.Configuration.GetSection("Cors").Bind(corsSettings);
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        if (corsSettings.AllowAllOrigins)
+        {
+            policy.AllowAnyOrigin();
+        }
+        else if (corsSettings.AllowedOrigins.Length > 0)
+        {
+            policy.WithOrigins(corsSettings.AllowedOrigins);
+        }
+
+        if (corsSettings.AllowedMethods.Length > 0)
+        {
+            policy.WithMethods(corsSettings.AllowedMethods);
+        }
+        else
+        {
+            policy.AllowAnyMethod();
+        }
+
+        if (corsSettings.AllowedHeaders.Length > 0)
+        {
+            policy.WithHeaders(corsSettings.AllowedHeaders);
+        }
+        else
+        {
+            policy.AllowAnyHeader();
+        }
+
+        if (corsSettings.AllowCredentials && !corsSettings.AllowAllOrigins)
+        {
+            policy.AllowCredentials();
+        }
+
+        policy.SetPreflightMaxAge(TimeSpan.FromSeconds(corsSettings.PreflightMaxAgeSeconds));
+    });
+});
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -27,6 +71,10 @@ builder.Services.Configure<SupabaseSettings>(
 // 配置駿河屋爬蟲設定
 builder.Services.Configure<SurugayaScraperSettings>(
     builder.Configuration.GetSection("SurugayaScraper"));
+
+// 配置 CORS 設定
+builder.Services.Configure<CorsSettings>(
+    builder.Configuration.GetSection("Cors"));
 
 // 配置 Supabase
 builder.Services.AddSingleton<Client>(provider =>
@@ -69,6 +117,8 @@ var app = builder.Build();
 app.UseHealthChecks("/health");
 app.UseSwaggerSettings(isProduction);
 
+// 啟用 CORS
+app.UseCors();
 
 app.UseHttpsRedirection();
 
