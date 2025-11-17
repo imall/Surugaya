@@ -24,7 +24,7 @@ jobs:
           
           echo "⏰ Ping completed at $(date)"
       
-      - name: Ping Swagger (backup)
+      - name: Ping health (backup)
         run: |
-          echo "📄 Checking Swagger endpoint..."
-          curl -f https://surugaya.onrender.com/swagger || echo "Swagger check completed"
+          echo "📄 Checking health endpoint..."
+          curl -f https://surugaya.onrender.com/health || echo "health check completed"
