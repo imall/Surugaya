@@ -23,10 +23,10 @@ builder.Services.AddSingleton<Client>(provider =>
     var configuration = builder.Configuration;
     var supabaseSettings = new SupabaseSettings();
     configuration.GetSection("Supabase").Bind(supabaseSettings);
-    
+
     if (string.IsNullOrEmpty(supabaseSettings.Url))
         throw new InvalidOperationException("Supabase URL 未設定");
-        
+
     if (string.IsNullOrEmpty(supabaseSettings.AnonKey))
         throw new InvalidOperationException("Supabase AnonKey 未設定");
 
@@ -52,12 +52,10 @@ builder.Services.AddScoped<SurugayaDetailsService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 
