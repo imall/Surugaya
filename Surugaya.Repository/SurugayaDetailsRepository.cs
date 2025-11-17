@@ -94,7 +94,7 @@ public class SurugayaDetailsRepository(Client supabaseClient)
             
             await supabaseClient
                 .From<SurugayaDetailDataModel>()
-                .Where(x => x.Url == url)
+                .Where(x => x.Url.Contains(url))
                 .Delete();
         }
         catch (Exception ex)

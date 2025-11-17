@@ -83,12 +83,11 @@ public class SurugayaRepository(Client supabaseClient)
     {
         try
         {
-
             var url = $"{ProjectConst.BaseUrl}/{id}";
-            
+
             await supabaseClient
                 .From<SurugayaDataModel>()
-                .Where(x => x.ProductUrl == url)
+                .Where(x => x.ProductUrl.Contains(url))
                 .Delete();
         }
         catch (Exception ex)
