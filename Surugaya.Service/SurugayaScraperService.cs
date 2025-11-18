@@ -15,6 +15,8 @@ public class SurugayaScraperService(SurugayaRepository repo, SurugayaDetailsRepo
     {
         var surugaya = await repo.GetSurugayaByUrlAsync(url);
         var product = await scraper.ScrapeProductAsync(surugaya.ProductUrl);
+
+        product.LastUpdated = surugaya.CreatedAt;
         var dto = await detailRepo.InsertOrUpdateSurugayaAsync(product);
 
         var result = new SurugayaDetailModel
@@ -36,20 +38,21 @@ public class SurugayaScraperService(SurugayaRepository repo, SurugayaDetailsRepo
         // 取得所有 願望清單 資料
         var data = await repo.GetAllSurugayaAsync();
         // 擷取 url
-        var urls = data.Select(x => x.ProductUrl).ToArray();
+        var urlDatas = data.Select(x => new { url = x.ProductUrl, createAt = x.CreatedAt }).ToArray();
         var products = new List<SurugayaDetailDataModel>();
 
         // 逐一爬取每個商品
-        for (var i = 0; i < urls.Length; i++)
+        for (var i = 0; i < urlDatas.Length; i++)
         {
             try
             {
-                Console.WriteLine($"[{i + 1}/{urls.Length}] 正在處理...");
-                var product = await scraper.ScrapeProductAsync(urls[i]);
+                Console.WriteLine($"[{i + 1}/{urlDatas.Length}] 正在處理...");
+                var product = await scraper.ScrapeProductAsync(urlDatas[i].url);
+                product.LastUpdated = urlDatas[i].createAt;
                 products.Add(product);
                 Console.WriteLine($"✓ 完成: {product.Title}\n");
 
-                if (i >= urls.Length - 1) continue;
+                if (i >= urlDatas.Length - 1) continue;
 
                 Console.WriteLine("等待 1 秒...\n");
                 await Task.Delay(1000);
@@ -61,15 +64,20 @@ public class SurugayaScraperService(SurugayaRepository repo, SurugayaDetailsRepo
         }
 
         var dto = await detailRepo.InsertOrUpdateSurugayaAsync(products);
-        return dto.Select(x => new SurugayaDetailModel
+        return dto.Select(x =>
         {
-            Url = x.Url,
-            Title = x.Title,
-            ImageUrl = x.ImageUrl,
-            CurrentPrice = x.CurrentPrice,
-            SalePrice = x.SalePrice,
-            Status = x.Status,
-            LastUpdated = x.LastUpdated
+            var uri = new Uri(x.Url);
+            return new SurugayaDetailModel
+            {
+                Id = int.Parse(uri.Segments.Last()),
+                Url = x.Url,
+                Title = x.Title,
+                ImageUrl = x.ImageUrl,
+                CurrentPrice = x.CurrentPrice,
+                SalePrice = x.SalePrice,
+                Status = x.Status,
+                LastUpdated = x.LastUpdated
+            };
         });
     }
 }
