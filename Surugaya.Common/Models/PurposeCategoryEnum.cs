@@ -4,7 +4,7 @@ public enum PurposeCategoryEnum
 {
     None = 0,
 
-    購買清單 = 1,
+    購買 = 1,
 
-    販售清單 = 2
+    販售 = 2
 }
