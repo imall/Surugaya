@@ -14,13 +14,7 @@ public class SurugayaScraperSettings
     /// 執行時間設定 (24小時制，格式: HH:mm)
     /// 預設為 00:00, 06:00, 12:00, 18:00
     /// </summary>
-    public string[] ScheduledTimes { get; set; } = 
-    {
-        "00:00",
-        "06:00", 
-        "12:00",
-        "18:00"
-    };
+    public string[] ScheduledTimes { get; set; }
 
     /// <summary>
     /// 錯誤重試間隔 (分鐘)

@@ -122,7 +122,7 @@ public class ScraperUtil
             else
             {
                 // 如果找不到庫存標籤，嘗試其他可能的狀態
-                var statusNode = doc.DocumentNode.SelectSingleNode("//p[@class='status']");
+                var statusNode = doc.DocumentNode.SelectSingleNode("//span[@class='tag_product tag_popular']");
                 product.Status = statusNode?.InnerText.Trim() ?? "未知";
             }
         }

@@ -54,8 +54,8 @@ public class SurugayaScraperService(SurugayaRepository repo, SurugayaDetailsRepo
 
                 if (i >= urlDatas.Length - 1) continue;
 
-                Console.WriteLine("等待 1 秒...\n");
-                await Task.Delay(1000);
+                Console.WriteLine("等待 0.5 秒...\n");
+                await Task.Delay(500);
             }
             catch (Exception ex)
             {
