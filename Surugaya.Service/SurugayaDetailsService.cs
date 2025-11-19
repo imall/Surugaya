@@ -27,7 +27,8 @@ public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository,
                 SalePrice = x.SalePrice,
                 Status = x.Status,
                 LastUpdated = x.LastUpdated,
-                PurposeCategory = x.PurposeCategory.ToString()
+                PurposeCategory = x.PurposeCategory.ToString(),
+                SeriesName = x.SeriesName
             };
         });
     }
