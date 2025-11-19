@@ -54,8 +54,7 @@ public class SurugayaRepository(Client supabaseClient)
             throw new Exception($"根據 ID 取得 SurugayaDataModel 資料失敗: {ex.Message}", ex);
         }
     }
-
-
+    
     public async Task<bool> IsUrlExistAsync(string url)
     {
         try
@@ -74,6 +73,8 @@ public class SurugayaRepository(Client supabaseClient)
             throw new Exception($"根據 ID 取得 SurugayaDataModel 資料失敗: {ex.Message}", ex);
         }
     }
+    
+    
 
     /// <summary>
     /// 透過 id 刪除資料
@@ -95,4 +96,6 @@ public class SurugayaRepository(Client supabaseClient)
             throw new Exception($"根據 ID 刪除 SurugayaDataModel 資料失敗: {ex.Message}", ex);
         }
     }
+    
+    
 }

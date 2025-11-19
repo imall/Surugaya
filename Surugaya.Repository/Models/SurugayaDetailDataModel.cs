@@ -8,7 +8,7 @@ public class SurugayaDetailDataModel : BaseModel
 {
     [PrimaryKey("url")]
     [Column("url")]
-    public string Url { get; set; } 
+    public string Url { get; set; }
 
     [Column("title")]
     public string Title { get; set; }
@@ -27,4 +27,10 @@ public class SurugayaDetailDataModel : BaseModel
 
     [Column("lastUpdated")]
     public DateTime LastUpdated { get; set; }
+
+    [Column("purposeCategory")]
+    public PurposeCategoryEnum PurposeCategory { get; set; }
+
+    [Column("seriesName")]
+    public string? SeriesName { get; set; }
 }

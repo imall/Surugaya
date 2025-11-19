@@ -1,5 +1,6 @@
 ﻿using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
+using Surugaya.Repository.Models;
 
 namespace Surugaya.Common.Models;
 
@@ -13,4 +14,8 @@ public class SurugayaDetailModel
     public decimal? SalePrice { get; set; }
     public string Status { get; set; } = string.Empty;
     public DateTime LastUpdated { get; set; }
+    
+    public string PurposeCategory { get; set; }
+    
+    public string? SeriesName { get; set; }
 }

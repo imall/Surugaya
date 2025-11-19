@@ -32,7 +32,6 @@ public class SurugayaDetailsRepository(Client supabaseClient)
         }
     }
 
-
     /// <summary>
     /// 新增單筆清單資料
     /// </summary>
@@ -54,7 +53,6 @@ public class SurugayaDetailsRepository(Client supabaseClient)
             throw new Exception($"插入或更新 SurugayaDetailDataModel 資料失敗: {ex.Message}", ex);
         }
     }
-
 
     /// <summary>
     /// 取得 urls 清單的所有細節資料
@@ -82,6 +80,67 @@ public class SurugayaDetailsRepository(Client supabaseClient)
     }
 
     /// <summary>
+    /// 更新商品的用途分類
+    /// </summary>
+    /// <param name="id">商品 id</param>
+    /// <param name="purposeCategory">新的分類</param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async Task<SurugayaDetailDataModel> UpdatePurposeCategoryAsync(int id, PurposeCategoryEnum purposeCategory)
+    {
+        try
+        {
+            var url = $"{ProjectConst.BaseUrl}/{id}";
+            var response = await supabaseClient
+                .From<SurugayaDetailDataModel>()
+                .Where(x => x.Url.Contains(url))
+                .Set(x => x.PurposeCategory, purposeCategory)
+                .Update();
+
+            if (response.Models == null || response.Models.Count == 0)
+            {
+                throw new Exception($"找不到 URL 為 {url} 的商品資料");
+            }
+
+            return response.Models.First();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"更新 SurugayaDetailDataModel 分類失敗: {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
+    /// 更新商品的作品名稱
+    /// </summary>
+    /// <param name="id">id</param>
+    /// <param name="seriesName">作品名稱</param>
+    /// <returns></returns>
+    public async Task<SurugayaDetailDataModel> UpdateSeriesNameAsync(int id, string seriesName)
+    {
+        try
+        {
+            var url = $"{ProjectConst.BaseUrl}/{id}";
+            var response = await supabaseClient
+                .From<SurugayaDetailDataModel>()
+                .Where(x => x.Url.Contains(url))
+                .Set(x => x.SeriesName, seriesName)
+                .Update();
+
+            if (response.Models == null || !response.Models.Any())
+            {
+                throw new Exception($"找不到 URL 為 {url} 的商品資料");
+            }
+
+            return response.Models.First();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"更新作品名稱失敗: {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
     /// 依照 url 刪除資料
     /// </summary>
     /// <param name="id">商品 Id</param>
@@ -91,7 +150,7 @@ public class SurugayaDetailsRepository(Client supabaseClient)
         try
         {
             var url = $"{ProjectConst.BaseUrl}/{id}";
-            
+
             await supabaseClient
                 .From<SurugayaDetailDataModel>()
                 .Where(x => x.Url.Contains(url))
