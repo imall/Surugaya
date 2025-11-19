@@ -37,10 +37,10 @@ public static class SwaggerSettings
     /// </summary>
     public static void UseSwaggerSettings(this WebApplication app, bool isProduction)
     {
-        if (isProduction)
-        {
-            return;
-        }
+        // if (isProduction)
+        // {
+        //     return;
+        // }
 
         app.UseSwagger();
 
