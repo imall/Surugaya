@@ -16,7 +16,7 @@ public class SurugayaScraperController(SurugayaScraperService scraperService) : 
     /// 讀取已記錄的願望清單 url ，並寫入資料庫
     /// </summary>
     /// <returns>商品資訊列表</returns>
-    [HttpGet("scrape-products")]
+    [HttpPost("scrape-products")]
     public async Task<ActionResult<IEnumerable<SurugayaDetailModel>>> ScrapeProductInfo()
     {
         try
