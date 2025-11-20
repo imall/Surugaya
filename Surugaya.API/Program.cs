@@ -102,8 +102,8 @@ builder.Services.AddSingleton<Client>(provider =>
 });
 
 // 註冊服務
-builder.Services.AddScoped<SurugayaService>();
-builder.Services.AddScoped<SurugayaRepository>();
+builder.Services.AddScoped<SurugayaUrlsService>();
+builder.Services.AddScoped<SurugayaUrlsRepository>();
 builder.Services.AddScoped<SurugayaDetailsRepository>();
 builder.Services.AddScoped<ScraperUtil>();
 builder.Services.AddScoped<SurugayaScraperService>();

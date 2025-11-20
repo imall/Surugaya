@@ -4,11 +4,11 @@ using Surugaya.Repository.Models;
 
 namespace Surugaya.Service;
 
-public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository, SurugayaCategoryRepository categoryRepository, SurugayaRepository repository)
+public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository, SurugayaCategoryRepository categoryRepository, SurugayaUrlsRepository urlsRepository)
 {
     public async Task<IEnumerable<SurugayaDetailModel>> GetAllInUrlAsync()
     {
-        var dto = await repository.GetAllSurugayaAsync();
+        var dto = await urlsRepository.GetAllSurugayaAsync();
 
         var urls = dto.Select(x => x.ProductUrl);
 

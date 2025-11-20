@@ -4,7 +4,7 @@ using Surugaya.Repository.Models;
 
 namespace Surugaya.Service;
 
-public class SurugayaCategoryService(SurugayaCategoryRepository detailsRepository, SurugayaRepository repository)
+public class SurugayaCategoryService(SurugayaCategoryRepository detailsRepository, SurugayaUrlsRepository urlsRepository)
 {
     /// <summary>
     /// 新增或更新目的
@@ -12,11 +12,11 @@ public class SurugayaCategoryService(SurugayaCategoryRepository detailsRepositor
     /// <param name="url"></param>
     /// <param name="purposeCategory"></param>
     /// <returns></returns>
-    public async Task<SurugayaDetailModel> UpdatePurposeCategoryAsync(int url, PurposeCategoryEnum purposeCategory)
+    public async Task<SurugayaCategoryModel> UpdatePurposeCategoryAsync(int url, PurposeCategoryEnum purposeCategory)
     {
         var dto = await detailsRepository.UpsertPurposeCategoryAsync(url, purposeCategory);
         var uri = new Uri(dto.Url);
-        return new SurugayaDetailModel
+        return new SurugayaCategoryModel
         {
             Id = int.Parse(uri.Segments.Last()),
             Url = dto.Url,
@@ -31,11 +31,11 @@ public class SurugayaCategoryService(SurugayaCategoryRepository detailsRepositor
     /// <param name="id"></param>
     /// <param name="seriesName"></param>
     /// <returns></returns>
-    public async Task<SurugayaDetailModel> UpdateSeriesNameAsync(int id, string seriesName)
+    public async Task<SurugayaCategoryModel> UpdateSeriesNameAsync(int id, string seriesName)
     {
         var dto = await detailsRepository.UpsertSeriesNameAsync(id, seriesName);
         var uri = new Uri(dto.Url);
-        return new SurugayaDetailModel
+        return new SurugayaCategoryModel
         {
             Id = int.Parse(uri.Segments.Last()),
             Url = dto.Url,
@@ -52,11 +52,11 @@ public class SurugayaCategoryService(SurugayaCategoryRepository detailsRepositor
     /// <param name="purposeCategory"></param>
     /// <param name="seriesName"></param>
     /// <returns></returns>
-    public async Task<SurugayaDetailModel> UpsertCategoryAndSeriesAsync(int id, PurposeCategoryEnum purposeCategory, string? seriesName)
+    public async Task<SurugayaCategoryModel> UpsertPurposeAndSeriesAsync(int id, PurposeCategoryEnum purposeCategory, string? seriesName)
     {
         var dto = await detailsRepository.UpsertCategoryAndSeriesAsync(id, purposeCategory, seriesName);
         var uri = new Uri(dto.Url);
-        return new SurugayaDetailModel
+        return new SurugayaCategoryModel
         {
             Id = int.Parse(uri.Segments.Last()),
             Url = dto.Url,

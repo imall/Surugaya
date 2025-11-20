@@ -9,7 +9,7 @@ namespace Surugaya.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class SurugayaController(SurugayaService service, ILogger<SurugayaController> logger) : ControllerBase
+public class SurugayaUrlsController(SurugayaUrlsService urlsService, ILogger<SurugayaUrlsController> logger) : ControllerBase
 {
     /// <summary>
     /// 插入新的 SurugayaDataModel 資料
@@ -21,13 +21,12 @@ public class SurugayaController(SurugayaService service, ILogger<SurugayaControl
     {
         try
         {
-            var result = await service.InsertSurugayaAsync(parameter);
+            var result = await urlsService.InsertSurugayaAsync(parameter);
 
             return CreatedAtAction(nameof(InsertSurugaya), result);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "插入 SurugayaDataModel 資料時發生錯誤");
             return StatusCode(500, new { error = "插入資料時發生內部錯誤", message = ex.Message });
         }
     }
@@ -41,7 +40,7 @@ public class SurugayaController(SurugayaService service, ILogger<SurugayaControl
     {
         try
         {
-            var result = await service.GetAllSurugayaAsync();
+            var result = await urlsService.GetAllSurugayaAsync();
             return Ok(result);
         }
         catch (Exception ex)
@@ -61,7 +60,7 @@ public class SurugayaController(SurugayaService service, ILogger<SurugayaControl
     {
         try
         {
-            await service.DeleteFromIdAsync(id);
+            await urlsService.DeleteFromIdAsync(id);
         }
         catch (Exception ex)
         {

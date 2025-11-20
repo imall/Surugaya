@@ -4,15 +4,15 @@ using Surugaya.Repository.Models;
 
 namespace Surugaya.Repository;
 
-public class SurugayaRepository(Client supabaseClient)
+public class SurugayaUrlsRepository(Client supabaseClient)
 {
-    public async Task<Models.Surugaya> InsertSurugayaAsync(Models.Surugaya surugaya)
+    public async Task<SurugayaUrls> InsertSurugayaAsync(SurugayaUrls surugayaUrls)
     {
         try
         {
             var response = await supabaseClient
-                .From<Models.Surugaya>()
-                .Insert(surugaya);
+                .From<SurugayaUrls>()
+                .Insert(surugayaUrls);
 
             return response.Model!;
         }
@@ -22,12 +22,12 @@ public class SurugayaRepository(Client supabaseClient)
         }
     }
 
-    public async Task<IEnumerable<Models.Surugaya>> GetAllSurugayaAsync()
+    public async Task<IEnumerable<SurugayaUrls>> GetAllSurugayaAsync()
     {
         try
         {
             var response = await supabaseClient
-                .From<Models.Surugaya>()
+                .From<SurugayaUrls>()
                 .Get();
 
             return response.Models;
@@ -38,12 +38,12 @@ public class SurugayaRepository(Client supabaseClient)
         }
     }
 
-    public async Task<Models.Surugaya?> GetSurugayaByUrlAsync(string url)
+    public async Task<SurugayaUrls?> GetSurugayaByUrlAsync(string url)
     {
         try
         {
             var response = await supabaseClient
-                .From<Models.Surugaya>()
+                .From<SurugayaUrls>()
                 .Where(x => x.ProductUrl == url)
                 .Single();
 
@@ -60,7 +60,7 @@ public class SurugayaRepository(Client supabaseClient)
         try
         {
             var response = await supabaseClient
-                .From<Models.Surugaya>()
+                .From<SurugayaUrls>()
                 .Where(x => x.ProductUrl == url)
                 .Get();
 
@@ -87,7 +87,7 @@ public class SurugayaRepository(Client supabaseClient)
             var url = $"{ProjectConst.BaseUrl}/{id}";
 
             await supabaseClient
-                .From<Models.Surugaya>()
+                .From<SurugayaUrls>()
                 .Where(x => x.ProductUrl.Contains(url))
                 .Delete();
         }

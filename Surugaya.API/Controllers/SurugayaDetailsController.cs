@@ -10,7 +10,7 @@ namespace Surugaya.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class SurugayaDetailsController(SurugayaDetailsService service, ILogger<SurugayaController> logger) : ControllerBase
+public class SurugayaDetailsController(SurugayaDetailsService service, ILogger<SurugayaUrlsController> logger) : ControllerBase
 {
     /// <summary>
     /// 取得所有清單

@@ -9,7 +9,7 @@ namespace Surugaya.Service;
 /// 處理網址
 /// </summary>
 /// <param name="repo"></param>
-public class SurugayaService(SurugayaRepository repo,SurugayaDetailsRepository detailsRepository, SurugayaScraperService service)
+public class SurugayaUrlsService(SurugayaUrlsRepository repo,SurugayaDetailsRepository detailsRepository, SurugayaScraperService service)
 {
     public async Task<SurugayaDetailModel> InsertSurugayaAsync(CreateSurugayaParameter parameter)
     {
@@ -19,7 +19,7 @@ public class SurugayaService(SurugayaRepository repo,SurugayaDetailsRepository d
             throw new Exception("該 ProductUrl 已存在，無法重複插入。");
         }
 
-        var surugaya = new Repository.Models.Surugaya
+        var surugaya = new SurugayaUrls
         {
             ProductUrl = parameter.ProductUrl,
             CreatedAt = DateTime.Now
