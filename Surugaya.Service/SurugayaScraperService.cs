@@ -18,7 +18,29 @@ public class SurugayaScraperService(SurugayaUrlsRepository repo, SurugayaDetails
 
         product.LastUpdated = surugaya.CreatedAt;
         var dto = await detailRepo.InsertOrUpdateSurugayaAsync(product);
+        var uri = new Uri(dto.Url);
+        var id = int.Parse(uri.Segments.Last());
 
+        // 智能匹配作品名稱
+        var seriesName = SeriesNameMapper.GetSeriesName(dto.Title);
+
+        if (!string.IsNullOrEmpty(seriesName))
+        {
+            try
+            {
+                await categoryRepository.UpsertSeriesNameAsync(id, seriesName);
+                Console.WriteLine($"✓ 已更新作品名稱: {dto.Title} -> {seriesName}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"✗ 更新作品名稱失敗: {dto.Title} - {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine($"⚠ 未找到匹配的作品名稱: {dto.Title}");
+        }
+        
         var result = new SurugayaDetailModel
         {
             Url = dto.Url,
