@@ -21,7 +21,7 @@ public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository,
         return details.Select(x =>
         {
             var uri = new Uri(x.Url);
-            var baseUrl = uri.GetLeftPart(UriPartial.Authority);
+            var baseUrl = uri.GetLeftPart(UriPartial.Path);
     
             // 從字典中找到對應的 category
             categoriesDict.TryGetValue(baseUrl, out var category);
