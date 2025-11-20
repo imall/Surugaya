@@ -1,4 +1,4 @@
-﻿using HtmlAgilityPack;
+﻿using Surugaya.Common.Mapper;
 using Surugaya.Common.Models;
 using Surugaya.Repository;
 using Surugaya.Repository.Models;
@@ -9,7 +9,7 @@ namespace Surugaya.Service;
 /// <summary>
 /// 爬蟲服務
 /// </summary>
-public class SurugayaScraperService(SurugayaUrlsRepository repo, SurugayaDetailsRepository detailRepo, ScraperUtil scraper)
+public class SurugayaScraperService(SurugayaUrlsRepository repo, SurugayaDetailsRepository detailRepo, SurugayaCategoryRepository categoryRepository, ScraperUtil scraper)
 {
     public async Task<SurugayaDetailModel> ScrapeProductInfoByUrl(string url)
     {
@@ -63,8 +63,36 @@ public class SurugayaScraperService(SurugayaUrlsRepository repo, SurugayaDetails
             }
         }
 
-        var dto = await detailRepo.InsertOrUpdateSurugayaAsync(products);
-        return dto.Select(x =>
+        var detailsDto = await detailRepo.InsertOrUpdateSurugayaAsync(products);
+
+        // 批量更新作品名稱
+        foreach (var detail in detailsDto)
+        {
+            var uri = new Uri(detail.Url);
+            var id = int.Parse(uri.Segments.Last());
+
+            // 智能匹配作品名稱
+            var seriesName = SeriesNameMapper.GetSeriesName(detail.Title);
+
+            if (!string.IsNullOrEmpty(seriesName))
+            {
+                try
+                {
+                    await categoryRepository.UpsertSeriesNameAsync(id, seriesName);
+                    Console.WriteLine($"✓ 已更新作品名稱: {detail.Title} -> {seriesName}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"✗ 更新作品名稱失敗: {detail.Title} - {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"⚠ 未找到匹配的作品名稱: {detail.Title}");
+            }
+        }
+
+        return detailsDto.Select(x =>
         {
             var uri = new Uri(x.Url);
             return new SurugayaDetailModel

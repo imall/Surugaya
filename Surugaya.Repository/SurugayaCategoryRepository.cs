@@ -12,18 +12,14 @@ public class SurugayaCategoryRepository(Client supabaseClient)
     /// <summary>
     /// 取得 urls 清單的所有細節資料
     /// </summary>
-    /// <param name="urls"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public async Task<IEnumerable<SurugayaCategory>> GetAllInUrlAsync(IEnumerable<string> urls)
+    public async Task<IEnumerable<SurugayaCategory>> GetAllCategoryAsync()
     {
         try
         {
-            var urlList = urls.ToList();
-
             var response = await supabaseClient
                 .From<SurugayaCategory>()
-                .Filter("url", Constants.Operator.In, urlList)
                 .Get();
 
             return response.Models;

@@ -79,8 +79,6 @@ public class SurugayaDetailsRepository(Client supabaseClient)
         }
     }
 
-
-
     /// <summary>
     /// 依照 url 刪除資料
     /// </summary>

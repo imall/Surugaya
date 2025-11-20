@@ -13,7 +13,7 @@ public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository,
         var urls = dto.Select(x => x.ProductUrl);
 
         var details = await detailsRepository.GetAllInUrlAsync(urls);
-        var categories = await categoryRepository.GetAllInUrlAsync(urls);
+        var categories = await categoryRepository.GetAllCategoryAsync();
 
         // 將 categories 轉換為字典，以 URL 作為 key
         var categoriesDict = categories.ToDictionary(c => c.Url);
@@ -21,8 +21,10 @@ public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository,
         return details.Select(x =>
         {
             var uri = new Uri(x.Url);
-            // 嘗試從字典中找到對應的 category
-            categoriesDict.TryGetValue(x.Url, out var category);
+            var baseUrl = uri.GetLeftPart(UriPartial.Authority);
+    
+            // 從字典中找到對應的 category
+            categoriesDict.TryGetValue(baseUrl, out var category);
             
             return new SurugayaDetailModel
             {
