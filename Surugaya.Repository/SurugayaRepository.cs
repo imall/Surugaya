@@ -6,44 +6,44 @@ namespace Surugaya.Repository;
 
 public class SurugayaRepository(Client supabaseClient)
 {
-    public async Task<SurugayaDataModel> InsertSurugayaAsync(SurugayaDataModel surugayaDataModel)
+    public async Task<Models.Surugaya> InsertSurugayaAsync(Models.Surugaya surugaya)
     {
         try
         {
             var response = await supabaseClient
-                .From<SurugayaDataModel>()
-                .Insert(surugayaDataModel);
+                .From<Models.Surugaya>()
+                .Insert(surugaya);
 
             return response.Model!;
         }
         catch (Exception ex)
         {
-            throw new Exception($"插入 SurugayaDataModel 資料失敗: {ex.Message}", ex);
+            throw new Exception($"插入 Surugaya 資料失敗: {ex.Message}", ex);
         }
     }
 
-    public async Task<IEnumerable<SurugayaDataModel>> GetAllSurugayaAsync()
+    public async Task<IEnumerable<Models.Surugaya>> GetAllSurugayaAsync()
     {
         try
         {
             var response = await supabaseClient
-                .From<SurugayaDataModel>()
+                .From<Models.Surugaya>()
                 .Get();
 
             return response.Models;
         }
         catch (Exception ex)
         {
-            throw new Exception($"取得 SurugayaDataModel 資料失敗: {ex.Message}", ex);
+            throw new Exception($"取得 Surugaya 資料失敗: {ex.Message}", ex);
         }
     }
 
-    public async Task<SurugayaDataModel?> GetSurugayaByUrlAsync(string url)
+    public async Task<Models.Surugaya?> GetSurugayaByUrlAsync(string url)
     {
         try
         {
             var response = await supabaseClient
-                .From<SurugayaDataModel>()
+                .From<Models.Surugaya>()
                 .Where(x => x.ProductUrl == url)
                 .Single();
 
@@ -51,7 +51,7 @@ public class SurugayaRepository(Client supabaseClient)
         }
         catch (Exception ex)
         {
-            throw new Exception($"根據 ID 取得 SurugayaDataModel 資料失敗: {ex.Message}", ex);
+            throw new Exception($"根據 ID 取得 Surugaya 資料失敗: {ex.Message}", ex);
         }
     }
     
@@ -60,7 +60,7 @@ public class SurugayaRepository(Client supabaseClient)
         try
         {
             var response = await supabaseClient
-                .From<SurugayaDataModel>()
+                .From<Models.Surugaya>()
                 .Where(x => x.ProductUrl == url)
                 .Get();
 
@@ -70,7 +70,7 @@ public class SurugayaRepository(Client supabaseClient)
         }
         catch (Exception ex)
         {
-            throw new Exception($"根據 ID 取得 SurugayaDataModel 資料失敗: {ex.Message}", ex);
+            throw new Exception($"根據 ID 取得 Surugaya 資料失敗: {ex.Message}", ex);
         }
     }
     
@@ -87,13 +87,13 @@ public class SurugayaRepository(Client supabaseClient)
             var url = $"{ProjectConst.BaseUrl}/{id}";
 
             await supabaseClient
-                .From<SurugayaDataModel>()
+                .From<Models.Surugaya>()
                 .Where(x => x.ProductUrl.Contains(url))
                 .Delete();
         }
         catch (Exception ex)
         {
-            throw new Exception($"根據 ID 刪除 SurugayaDataModel 資料失敗: {ex.Message}", ex);
+            throw new Exception($"根據 ID 刪除 Surugaya 資料失敗: {ex.Message}", ex);
         }
     }
     

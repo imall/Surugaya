@@ -4,7 +4,7 @@ using Supabase.Postgrest.Models;
 namespace Surugaya.Repository.Models;
 
 [Table("SurugayaDetails")]
-public class SurugayaDetailDataModel : BaseModel
+public class SurugayaDetail : BaseModel
 {
     [PrimaryKey("url")]
     [Column("url")]
@@ -27,10 +27,4 @@ public class SurugayaDetailDataModel : BaseModel
 
     [Column("lastUpdated")]
     public DateTime LastUpdated { get; set; }
-
-    [Column("purposeCategory")]
-    public PurposeCategoryEnum PurposeCategory { get; set; }
-
-    [Column("seriesName")]
-    public string? SeriesName { get; set; }
 }

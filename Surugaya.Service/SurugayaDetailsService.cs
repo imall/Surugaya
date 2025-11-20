@@ -4,7 +4,7 @@ using Surugaya.Repository.Models;
 
 namespace Surugaya.Service;
 
-public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository, SurugayaRepository repository)
+public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository, SurugayaCategoryRepository categoryRepository, SurugayaRepository repository)
 {
     public async Task<IEnumerable<SurugayaDetailModel>> GetAllInUrlAsync()
     {
@@ -13,10 +13,17 @@ public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository,
         var urls = dto.Select(x => x.ProductUrl);
 
         var details = await detailsRepository.GetAllInUrlAsync(urls);
+        var categories = await categoryRepository.GetAllInUrlAsync(urls);
+
+        // 將 categories 轉換為字典，以 URL 作為 key
+        var categoriesDict = categories.ToDictionary(c => c.Url);
 
         return details.Select(x =>
         {
             var uri = new Uri(x.Url);
+            // 嘗試從字典中找到對應的 category
+            categoriesDict.TryGetValue(x.Url, out var category);
+            
             return new SurugayaDetailModel
             {
                 Id = int.Parse(uri.Segments.Last()),
@@ -27,47 +34,9 @@ public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository,
                 SalePrice = x.SalePrice,
                 Status = x.Status,
                 LastUpdated = x.LastUpdated,
-                PurposeCategory = x.PurposeCategory.ToString(),
-                SeriesName = x.SeriesName
+                PurposeCategory = category?.PurposeCategory.ToString() ?? string.Empty,
+                SeriesName = category?.SeriesName ?? string.Empty
             };
         });
-    }
-
-    public async Task<SurugayaDetailModel> UpdatePurposeCategoryAsync(int url, PurposeCategoryEnum purposeCategory)
-    {
-        var dto = await detailsRepository.UpdatePurposeCategoryAsync(url, purposeCategory);
-        var uri = new Uri(dto.Url);
-        return new SurugayaDetailModel
-        {
-            Id = int.Parse(uri.Segments.Last()),
-            Url = dto.Url,
-            Title = dto.Title,
-            ImageUrl = dto.ImageUrl,
-            CurrentPrice = dto.CurrentPrice,
-            SalePrice = dto.SalePrice,
-            Status = dto.Status,
-            LastUpdated = dto.LastUpdated,
-            PurposeCategory = dto.PurposeCategory.ToString(),
-            SeriesName = dto.SeriesName
-        };
-    }
-    
-    public async Task<SurugayaDetailModel> UpdateSeriesNameAsync(int id, string seriesName)
-    {
-        var dto = await detailsRepository.UpdateSeriesNameAsync(id, seriesName);
-        var uri = new Uri(dto.Url);
-        return new SurugayaDetailModel
-        {
-            Id = int.Parse(uri.Segments.Last()),
-            Url = dto.Url,
-            Title = dto.Title,
-            ImageUrl = dto.ImageUrl,
-            CurrentPrice = dto.CurrentPrice,
-            SalePrice = dto.SalePrice,
-            Status = dto.Status,
-            LastUpdated = dto.LastUpdated,
-            PurposeCategory = dto.PurposeCategory.ToString(),
-            SeriesName = dto.SeriesName
-        };
     }
 }

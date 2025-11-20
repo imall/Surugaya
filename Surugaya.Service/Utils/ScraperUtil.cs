@@ -17,7 +17,7 @@ public class ScraperUtil
         _httpClient.DefaultRequestHeaders.Add("Accept-Language", "ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7");
     }
 
-    public async Task<SurugayaDetailDataModel> ScrapeProductAsync(string url)
+    public async Task<SurugayaDetail> ScrapeProductAsync(string url)
     {
         // 下載網頁內容
         var html = await _httpClient.GetStringAsync(url);
@@ -26,7 +26,7 @@ public class ScraperUtil
         var doc = new HtmlDocument();
         doc.LoadHtml(html);
 
-        var product = new SurugayaDetailDataModel
+        var product = new SurugayaDetail
         {
             Url = url,
             LastUpdated = DateTime.Now

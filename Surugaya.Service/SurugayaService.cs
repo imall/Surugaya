@@ -19,7 +19,7 @@ public class SurugayaService(SurugayaRepository repo,SurugayaDetailsRepository d
             throw new Exception("該 ProductUrl 已存在，無法重複插入。");
         }
 
-        var surugaya = new SurugayaDataModel
+        var surugaya = new Repository.Models.Surugaya
         {
             ProductUrl = parameter.ProductUrl,
             CreatedAt = DateTime.Now

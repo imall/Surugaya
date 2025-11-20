@@ -5,7 +5,7 @@ using Supabase.Postgrest.Models;
 namespace Surugaya.Repository.Models;
 
 [Table("Surugaya")]
-public class SurugayaDataModel : BaseModel
+public class Surugaya : BaseModel
 {
     [PrimaryKey("productUrl", false)]
     [Column("productUrl")]

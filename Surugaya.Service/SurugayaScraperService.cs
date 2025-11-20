@@ -39,7 +39,7 @@ public class SurugayaScraperService(SurugayaRepository repo, SurugayaDetailsRepo
         var data = await repo.GetAllSurugayaAsync();
         // 擷取 url
         var urlDatas = data.Select(x => new { url = x.ProductUrl, createAt = x.CreatedAt }).ToArray();
-        var products = new List<SurugayaDetailDataModel>();
+        var products = new List<SurugayaDetail>();
 
         // 逐一爬取每個商品
         for (var i = 0; i < urlDatas.Length; i++)

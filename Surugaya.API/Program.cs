@@ -108,6 +108,8 @@ builder.Services.AddScoped<SurugayaDetailsRepository>();
 builder.Services.AddScoped<ScraperUtil>();
 builder.Services.AddScoped<SurugayaScraperService>();
 builder.Services.AddScoped<SurugayaDetailsService>();
+builder.Services.AddScoped<SurugayaCategoryService>();
+builder.Services.AddScoped<SurugayaCategoryRepository>();
 
 // 註冊背景服務
 builder.Services.AddHostedService<SurugayaScraperBackgroundService>();
