@@ -103,15 +103,8 @@ app.UseSwaggerSettings(isProduction);
 // 啟用 CORS
 app.UseCors();
 
-app.UseHangfireDashboard
-(
-    pathMatch: "/hangfire",
-    options: new DashboardOptions
-    {
-        Authorization = new List<IDashboardAuthorizationFilter>(),
-        IgnoreAntiforgeryToken = true
-    }
-);
+// 安全地啟用 Hangfire Dashboard（僅在服務已啟用時）
+app.UseHangfireDashboardSafely("/hangfire");
 
 app.UseHttpsRedirection();
 
