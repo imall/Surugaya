@@ -8,24 +8,7 @@ using Surugaya.API.Settings;
 using Surugaya.Repository;
 using Surugaya.Service;
 using Surugaya.Service.Utils;
-using Npgsql;
 
-// 測試連線
-var testConnectionString = "Host=aws-0-ap-southeast-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.pdqzgeggpddgc1skrvov;Password=SGHDW6M7KVw160dQ;SSL Mode=Require;Trust Server Certificate=true;Timeout=30";
-
-try
-{
-    Console.WriteLine("開始測試 Supabase 連線...");
-    using var conn = new NpgsqlConnection(testConnectionString);
-    conn.Open();
-    Console.WriteLine("✓ Supabase 連線成功!");
-    conn.Close();
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"✗ Supabase 連線失敗: {ex.Message}");
-    throw;
-}
 var builder = WebApplication.CreateBuilder(args);
 
 var productionEnvList = new HashSet<string>(
