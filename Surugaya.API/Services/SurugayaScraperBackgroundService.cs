@@ -1,3 +1,4 @@
+using Hangfire;
 using Hangfire.Console;
 using Hangfire.Server;
 using Microsoft.Extensions.Logging;
@@ -39,6 +40,7 @@ public class SurugayaScraperJob
     /// </summary>
     /// <param name="context">Hangfire 執行上下文</param>
     /// <returns>非同步任務</returns>
+    [JobDisplayName("定時爬蟲任務")]
     public async Task ExecuteAsync(PerformContext? context)
     {
         using var timeoutCts = new CancellationTokenSource(TimeSpan.FromMinutes(_settings.TimeoutMinutes));

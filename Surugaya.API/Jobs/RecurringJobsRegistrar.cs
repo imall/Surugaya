@@ -16,6 +16,8 @@ public static class RecurringJobsRegistrar
     /// </summary>
     public static void RegisterRecurringJobs(this IApplicationBuilder app)
     {
+        var japanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
+
         var recurringJobManager = app.ApplicationServices
             .GetRequiredService<IRecurringJobManager>();
 
@@ -26,7 +28,7 @@ public static class RecurringJobsRegistrar
             cronExpression: "*/10 * * * *",
             options: new RecurringJobOptions
             {
-                TimeZone = TimeZoneInfo.Local
+                TimeZone = japanTimeZone
             });
 
         // 註冊駿河屋爬蟲任務
@@ -41,7 +43,7 @@ public static class RecurringJobsRegistrar
                 cronExpression: scraperSettings.CronExpression,
                 options: new RecurringJobOptions
                 {
-                    TimeZone = TimeZoneInfo.Local
+                    TimeZone = japanTimeZone
                 });
 
             Console.WriteLine($"✓ 駿河屋爬蟲任務已註冊，執行排程: {scraperSettings.CronExpression}");

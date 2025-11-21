@@ -1,4 +1,5 @@
 using System.Net.Http;
+using Hangfire;
 using Hangfire.Console;
 using Hangfire.Server;
 
@@ -24,6 +25,7 @@ public class HealthCheckJobService
     /// <summary>
     /// 執行健康檢查
     /// </summary>
+    [JobDisplayName("健康檢查")]
     public async Task ExecuteHealthCheckAsync(PerformContext? context)
     {
         try
