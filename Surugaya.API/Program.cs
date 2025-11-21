@@ -1,8 +1,6 @@
-using Hangfire;
-using Hangfire.Dashboard;
-using Supabase;
 using Surugaya.API.Configuration;
 using Surugaya.API.DependencyInjection;
+using Surugaya.API.Jobs;
 using Surugaya.API.Services;
 using Surugaya.API.Settings;
 using Surugaya.Repository;
@@ -82,6 +80,9 @@ builder.Services.AddSupabase(builder.Configuration);
 
 builder.Services.AddHangFireServices(builder.Configuration);
 
+// 註冊 HttpClient
+builder.Services.AddHttpClient();
+
 // 註冊服務
 builder.Services.AddScoped<SurugayaUrlsService>();
 builder.Services.AddScoped<SurugayaUrlsRepository>();
@@ -91,6 +92,7 @@ builder.Services.AddScoped<SurugayaScraperService>();
 builder.Services.AddScoped<SurugayaDetailsService>();
 builder.Services.AddScoped<SurugayaCategoryService>();
 builder.Services.AddScoped<SurugayaCategoryRepository>();
+builder.Services.AddScoped<HealthCheckJobService>();
 
 // 註冊背景服務
 builder.Services.AddHostedService<SurugayaScraperBackgroundService>();
@@ -104,9 +106,12 @@ app.UseSwaggerSettings(isProduction);
 app.UseCors();
 
 // 安全地啟用 Hangfire Dashboard（僅在服務已啟用時）
-app.UseHangfireDashboardSafely("/hangfire");
+app.UseHangfireDashboardSafely();
 
 app.UseHttpsRedirection();
+
+// 註冊 hangfire job
+app.RegisterRecurringJobs();
 
 app.UseAuthorization();
 

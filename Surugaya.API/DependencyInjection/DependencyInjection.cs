@@ -1,15 +1,12 @@
 ﻿using Hangfire;
-using Hangfire.SqlServer;
-using Microsoft.Extensions.Options;
+using Hangfire.Console;
 using Supabase;
 using Surugaya.API.Configuration;
 using Surugaya.API.Settings;
-
-namespace Surugaya.API.DependencyInjection;
-using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
-using Npgsql;
+
+namespace Surugaya.API.DependencyInjection;
 
 /// <summary>
 /// 依賴注入擴展方法
@@ -19,7 +16,8 @@ public static class DependencyInjection
     /// <summary>
     /// 標記 Hangfire 是否已成功初始化
     /// </summary>
-    public static bool IsHangfireEnabled { get; private set; } = false;
+    private static bool IsHangfireEnabled { get; set; } = false;
+    
     /// <summary>
     /// 新增 supabase 服務
     /// </summary>
@@ -92,6 +90,7 @@ public static class DependencyInjection
                     .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                     .UseSimpleAssemblyNameTypeSerializer()
                     .UseRecommendedSerializerSettings()
+                    .UseConsole()
                     .UsePostgreSqlStorage(options => 
                         options.UseNpgsqlConnection(supabaseConnectionString));
             });
