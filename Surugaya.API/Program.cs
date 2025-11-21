@@ -1,11 +1,31 @@
+using Hangfire;
+using Hangfire.Dashboard;
 using Supabase;
 using Surugaya.API.Configuration;
+using Surugaya.API.DependencyInjection;
 using Surugaya.API.Services;
 using Surugaya.API.Settings;
 using Surugaya.Repository;
 using Surugaya.Service;
 using Surugaya.Service.Utils;
+using Npgsql;
 
+// 測試連線
+var testConnectionString = "Host=aws-0-ap-southeast-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.pdqzgeggpddgc1skrvov;Password=SGHDW6M7KVw160dQ;SSL Mode=Require;Trust Server Certificate=true;Timeout=30";
+
+try
+{
+    Console.WriteLine("開始測試 Supabase 連線...");
+    using var conn = new NpgsqlConnection(testConnectionString);
+    conn.Open();
+    Console.WriteLine("✓ Supabase 連線成功!");
+    conn.Close();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"✗ Supabase 連線失敗: {ex.Message}");
+    throw;
+}
 var builder = WebApplication.CreateBuilder(args);
 
 var productionEnvList = new HashSet<string>(
@@ -60,7 +80,6 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerSettings();
 
@@ -76,30 +95,9 @@ builder.Services.Configure<SurugayaScraperSettings>(
 builder.Services.Configure<CorsSettings>(
     builder.Configuration.GetSection("Cors"));
 
-// 配置 Supabase
-builder.Services.AddSingleton<Client>(provider =>
-{
-    var configuration = builder.Configuration;
-    var supabaseSettings = new SupabaseSettings();
-    configuration.GetSection("Supabase").Bind(supabaseSettings);
+builder.Services.AddSupabase(builder.Configuration);
 
-    if (string.IsNullOrEmpty(supabaseSettings.Url))
-        throw new InvalidOperationException("Supabase URL 未設定");
-
-    if (string.IsNullOrEmpty(supabaseSettings.AnonKey))
-        throw new InvalidOperationException("Supabase AnonKey 未設定");
-
-    var options = new SupabaseOptions
-    {
-        AutoConnectRealtime = false // 根據需要啟用即時功能
-    };
-
-    // 使用服務金鑰 (如果有設定) 或匿名金鑰
-    var apiKey = supabaseSettings.GetApiKey();
-    var client = new Client(supabaseSettings.Url, apiKey, options);
-    client.InitializeAsync().Wait(); // 初始化客戶端
-    return client;
-});
+builder.Services.AddHangFireServices(builder.Configuration);
 
 // 註冊服務
 builder.Services.AddScoped<SurugayaUrlsService>();
@@ -121,6 +119,16 @@ app.UseSwaggerSettings(isProduction);
 
 // 啟用 CORS
 app.UseCors();
+
+app.UseHangfireDashboard
+(
+    pathMatch: "/hangfire",
+    options: new DashboardOptions
+    {
+        Authorization = new List<IDashboardAuthorizationFilter>(),
+        IgnoreAntiforgeryToken = true
+    }
+);
 
 app.UseHttpsRedirection();
 
