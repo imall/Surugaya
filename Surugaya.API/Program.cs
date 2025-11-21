@@ -68,10 +68,6 @@ builder.Services.AddSwaggerSettings();
 builder.Services.Configure<SupabaseSettings>(
     builder.Configuration.GetSection("Supabase"));
 
-// 配置駿河屋爬蟲設定
-builder.Services.Configure<SurugayaScraperSettings>(
-    builder.Configuration.GetSection("SurugayaScraper"));
-
 // 配置 CORS 設定
 builder.Services.Configure<CorsSettings>(
     builder.Configuration.GetSection("Cors"));
@@ -93,9 +89,7 @@ builder.Services.AddScoped<SurugayaDetailsService>();
 builder.Services.AddScoped<SurugayaCategoryService>();
 builder.Services.AddScoped<SurugayaCategoryRepository>();
 builder.Services.AddScoped<HealthCheckJobService>();
-
-// 註冊背景服務
-builder.Services.AddHostedService<SurugayaScraperBackgroundService>();
+builder.Services.AddScoped<SurugayaScraperJob>();
 
 var app = builder.Build();
 
