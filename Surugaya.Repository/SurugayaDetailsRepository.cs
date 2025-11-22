@@ -80,7 +80,7 @@ public class SurugayaDetailsRepository(Client supabaseClient)
     }
 
     /// <summary>
-    /// 依照 url 刪除資料
+    /// 依照 id 刪除資料
     /// </summary>
     /// <param name="id">商品 Id</param>
     /// <exception cref="Exception"></exception>
@@ -93,6 +93,26 @@ public class SurugayaDetailsRepository(Client supabaseClient)
             await supabaseClient
                 .From<SurugayaDetail>()
                 .Where(x => x.Url.Contains(url))
+                .Delete();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"根據 ID 刪除 SurugayaDetail 資料失敗: {ex.Message}", ex);
+        }
+    }
+
+
+    /// <summary>
+    /// 依照 url 刪除資料
+    /// </summary>
+    /// <param name="url">商品 url</param>
+    public async Task DeleteFromUrlAsync(string url)
+    {
+        try
+        {
+            await supabaseClient
+                .From<SurugayaDetail>()
+                .Where(x => x.Url == url)
                 .Delete();
         }
         catch (Exception ex)

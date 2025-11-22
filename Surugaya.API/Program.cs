@@ -104,8 +104,7 @@ app.UseHangfireDashboardSafely();
 
 app.UseHttpsRedirection();
 
-// 註冊 hangfire job
-app.RegisterRecurringJobs();
+
 
 app.UseAuthorization();
 

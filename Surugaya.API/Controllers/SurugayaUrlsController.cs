@@ -56,11 +56,29 @@ public class SurugayaUrlsController(SurugayaUrlsService urlsService, ILogger<Sur
     /// </summary>
     /// <param name="id">商品 id</param>
     [HttpDelete("{id:int}")]
-    public async Task DeleteFromUrl(int id)
+    public async Task DeleteFromId(int id)
     {
         try
         {
             await urlsService.DeleteFromIdAsync(id);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+    
+    /// <summary>
+    /// 透過駿河屋商品 url 刪除資料
+    /// </summary>
+    /// <param name="url">商品 url</param>
+    [HttpDelete("{url}")]
+    public async Task DeleteFromUrl(string url)
+    {
+        try
+        {
+            var decodedUrl = Uri.UnescapeDataString(url);
+            await urlsService.DeleteFromUrlAsync(decodedUrl);
         }
         catch (Exception ex)
         {

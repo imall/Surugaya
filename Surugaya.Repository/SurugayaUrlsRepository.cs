@@ -54,7 +54,7 @@ public class SurugayaUrlsRepository(Client supabaseClient)
             throw new Exception($"根據 ID 取得 Surugaya 資料失敗: {ex.Message}", ex);
         }
     }
-    
+
     public async Task<bool> IsUrlExistAsync(string url)
     {
         try
@@ -73,8 +73,7 @@ public class SurugayaUrlsRepository(Client supabaseClient)
             throw new Exception($"根據 ID 取得 Surugaya 資料失敗: {ex.Message}", ex);
         }
     }
-    
-    
+
 
     /// <summary>
     /// 透過 id 刪除資料
@@ -96,6 +95,24 @@ public class SurugayaUrlsRepository(Client supabaseClient)
             throw new Exception($"根據 ID 刪除 Surugaya 資料失敗: {ex.Message}", ex);
         }
     }
-    
-    
+
+
+    /// <summary>
+    /// 透過 url 刪除資料
+    /// </summary>
+    /// <param name="url">駿河屋的商品 Id</param>
+    public async Task DeleteFromUrlAsync(string url)
+    {
+        try
+        {
+            await supabaseClient
+                .From<SurugayaUrls>()
+                .Where(x => x.ProductUrl == url)
+                .Delete();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"根據 url 刪除 Surugaya 資料失敗: {ex.Message}", ex);
+        }
+    }
 }

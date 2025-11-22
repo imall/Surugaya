@@ -5,6 +5,7 @@ using Surugaya.API.Configuration;
 using Surugaya.API.Settings;
 using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
+using Surugaya.API.Jobs;
 
 namespace Surugaya.API.DependencyInjection;
 
@@ -17,7 +18,7 @@ public static class DependencyInjection
     /// 標記 Hangfire 是否已成功初始化
     /// </summary>
     private static bool IsHangfireEnabled { get; set; } = false;
-    
+
     /// <summary>
     /// 新增 supabase 服務
     /// </summary>
@@ -26,7 +27,8 @@ public static class DependencyInjection
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
     public static IServiceCollection AddSupabase(
-        this IServiceCollection services, IConfiguration configuration
+        this IServiceCollection services,
+        IConfiguration configuration
     )
     {
         services.AddSingleton<Client>(_ =>
@@ -42,18 +44,18 @@ public static class DependencyInjection
 
             var options = new SupabaseOptions
             {
-                AutoConnectRealtime = false 
+                AutoConnectRealtime = false
             };
-            
+
             var apiKey = supabaseSettings.GetApiKey();
             var client = new Client(supabaseSettings.Url, apiKey, options);
             client.InitializeAsync().Wait();
             return client;
         });
-        
+
         return services;
     }
-    
+
     /// <summary>
     /// 新增 Hangfire 服務（包含連線測試）
     /// </summary>
@@ -61,14 +63,14 @@ public static class DependencyInjection
     /// <param name="configuration">配置</param>
     /// <returns>服務集合</returns>
     public static IServiceCollection AddHangFireServices(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration configuration)
     {
         try
         {
             // 從 Supabase 取得連線字串
             var supabaseConnectionString = configuration.GetConnectionString("Supabase");
-            
+
             if (string.IsNullOrEmpty(supabaseConnectionString))
             {
                 Console.WriteLine("⚠ 警告: Supabase 連線字串未設定，跳過 Hangfire 服務初始化");
@@ -91,7 +93,7 @@ public static class DependencyInjection
                     .UseSimpleAssemblyNameTypeSerializer()
                     .UseRecommendedSerializerSettings()
                     .UseConsole()
-                    .UsePostgreSqlStorage(options => 
+                    .UsePostgreSqlStorage(options =>
                         options.UseNpgsqlConnection(supabaseConnectionString));
             });
 
@@ -126,11 +128,11 @@ public static class DependencyInjection
         {
             using var connection = new Npgsql.NpgsqlConnection(connectionString);
             connection.Open();
-            
+
             // 執行簡單查詢測試連線
             using var command = new Npgsql.NpgsqlCommand("SELECT 1", connection);
             command.ExecuteScalar();
-            
+
             Console.WriteLine("✓ 資料庫連線測試成功");
             return true;
         }
@@ -149,7 +151,7 @@ public static class DependencyInjection
     /// <param name="options">Dashboard 選項</param>
     /// <returns>應用程式建構器</returns>
     public static IApplicationBuilder UseHangfireDashboardSafely(
-        this IApplicationBuilder app, 
+        this IApplicationBuilder app,
         string pathMatch = "/hangfire",
         DashboardOptions? options = null)
     {
@@ -161,6 +163,8 @@ public static class DependencyInjection
                 IgnoreAntiforgeryToken = true
             };
 
+            
+            app.RegisterRecurringJobs();
             app.UseHangfireDashboard(pathMatch, options);
             Console.WriteLine($"✓ Hangfire Dashboard 已啟用，路徑: {pathMatch}");
         }

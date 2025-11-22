@@ -53,4 +53,11 @@ public class SurugayaUrlsService(SurugayaUrlsRepository repo,SurugayaDetailsRepo
         await repo.DeleteFromIdAsync(id);
         await detailsRepository.DeleteFromIdAsync(id);
     }
+    
+    
+    public async Task DeleteFromUrlAsync(string url)
+    {
+        await repo.DeleteFromUrlAsync(url);
+        await detailsRepository.DeleteFromUrlAsync(url);
+    }
 }
