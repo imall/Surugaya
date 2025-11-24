@@ -7,7 +7,6 @@ namespace Surugaya.Repository.Models;
 [Table("SurugayaUrls")]
 public class SurugayaUrls : BaseModel
 {
-    [PrimaryKey("productUrl", false)]
     [Column("productUrl")]
     public string ProductUrl { get; set; } = string.Empty;
 
