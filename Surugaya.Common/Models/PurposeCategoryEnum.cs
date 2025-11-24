@@ -6,5 +6,7 @@ public enum PurposeCategoryEnum
 
     購買 = 1,
 
-    販售 = 2
+    考慮 = 2,
+    
+    購物車 = 3
 }
