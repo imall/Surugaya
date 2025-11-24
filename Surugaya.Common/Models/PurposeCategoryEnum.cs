@@ -2,7 +2,7 @@
 
 public enum PurposeCategoryEnum
 {
-    None = 0,
+    未分類 = 0,
 
     購買 = 1,
 
