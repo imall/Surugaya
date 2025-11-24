@@ -8,6 +8,7 @@ public class SurugayaCategoryModel
 {
     public int Id { get; set; }
     public string Url { get; set; }
+    public PurposeCategoryEnum PurposeCategoryId { get; set; }
     public string PurposeCategory { get; set; }
     public string? SeriesName { get; set; }
 }

@@ -20,6 +20,7 @@ public class SurugayaCategoryService(SurugayaCategoryRepository detailsRepositor
         {
             Id = int.Parse(uri.Segments.Last()),
             Url = dto.Url,
+            PurposeCategoryId = dto.PurposeCategory,
             PurposeCategory = dto.PurposeCategory.ToString(),
             SeriesName = dto.SeriesName
         };
@@ -39,6 +40,7 @@ public class SurugayaCategoryService(SurugayaCategoryRepository detailsRepositor
         {
             Id = int.Parse(uri.Segments.Last()),
             Url = dto.Url,
+            PurposeCategoryId = dto.PurposeCategory,
             PurposeCategory = dto.PurposeCategory.ToString(),
             SeriesName = dto.SeriesName
         };
@@ -60,6 +62,7 @@ public class SurugayaCategoryService(SurugayaCategoryRepository detailsRepositor
         {
             Id = int.Parse(uri.Segments.Last()),
             Url = dto.Url,
+            PurposeCategoryId = dto.PurposeCategory,
             PurposeCategory = dto.PurposeCategory.ToString(),
             SeriesName = dto.SeriesName
         };
