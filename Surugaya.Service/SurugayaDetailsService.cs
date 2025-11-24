@@ -36,6 +36,7 @@ public class SurugayaDetailsService(SurugayaDetailsRepository detailsRepository,
                 SalePrice = x.SalePrice,
                 Status = x.Status,
                 LastUpdated = x.LastUpdated,
+                PurposeCategoryId = category?.PurposeCategory,
                 PurposeCategory = category?.PurposeCategory.ToString() ?? string.Empty,
                 SeriesName = category?.SeriesName ?? string.Empty
             };

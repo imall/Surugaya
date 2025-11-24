@@ -14,6 +14,7 @@ public class SurugayaDetailModel
     public decimal? SalePrice { get; set; }
     public string Status { get; set; } = string.Empty;
     public DateTime LastUpdated { get; set; }
+    public PurposeCategoryEnum? PurposeCategoryId { get; set; }
     
     public string PurposeCategory { get; set; }
     
