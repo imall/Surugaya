@@ -124,8 +124,6 @@ public class SurugayaScraperService(
         
         foreach (var detail in detailsDto)
         {
-            var uri = new Uri(detail.Url);
-            var id = int.Parse(uri.Segments.Last());
 
             // 智能匹配作品名稱
             var seriesName = SeriesNameMapper.GetSeriesName(detail.Title);
@@ -134,7 +132,7 @@ public class SurugayaScraperService(
             {
                 try
                 {
-                    await categoryRepository.UpsertSeriesNameAsync(id, seriesName);
+                    await categoryRepository.UpsertSeriesNameAsync(detail.Url, seriesName);
                     var message = $"✓ 已更新作品名稱: {detail.Title} -> {seriesName}";
                     Console.WriteLine(message);
                     writeLog?.Invoke(message);

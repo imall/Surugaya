@@ -16,31 +16,12 @@ public class SurugayaCategoryController(SurugayaCategoryService service) : Contr
     /// 編輯用途分類
     /// </summary>
     /// <returns></returns>
-    [HttpPatch("{id:int}/purposeCategory")]
-    public async Task<SurugayaCategoryModel> UpdatePurposeCategory(int id, PurposeCategoryEnum purposeCategory)
-    {
-        return await service.UpdatePurposeCategoryAsync(id, purposeCategory);
-    }
-    
-    /// <summary>
-    /// 編輯用途分類
-    /// </summary>
-    /// <returns></returns>
     [HttpPatch("purposeCategory/{purposeCategoryId}")]
     public async Task<SurugayaCategoryModel> UpdatePurposeCategory([FromBody]string url, PurposeCategoryEnum purposeCategoryId)
     {
         return await service.UpdatePurposeCategoryAsync(url, purposeCategoryId);
     }
-
-    /// <summary>
-    /// 編輯作品名稱
-    /// </summary>
-    [HttpPatch("{id:int}/seriesName")]
-    public async Task<SurugayaCategoryModel> UpdateSeriesName(int id, string seriesName)
-    {
-        return await service.UpdateSeriesNameAsync(id, seriesName);
-    }
-
+    
     /// <summary>
     /// 編輯作品名稱
     /// </summary>
@@ -48,16 +29,6 @@ public class SurugayaCategoryController(SurugayaCategoryService service) : Contr
     public async Task<SurugayaCategoryModel> UpdateSeriesName(string url, string seriesName)
     {
         return await service.UpdateSeriesNameAsync(url, seriesName);
-    }
-    
-    /// <summary>
-    /// 編輯目的與作品名稱
-    /// </summary>
-    /// <returns></returns>
-    [HttpPatch("{id:int}/purposeAndSeries")]
-    public async Task<SurugayaCategoryModel> UpsertPurposeAndSeries(int id, PurposeCategoryEnum purposeCategory, string seriesName)
-    {
-        return await service.UpsertPurposeAndSeriesAsync(id, purposeCategory, seriesName);
     }
     
     /// <summary>
