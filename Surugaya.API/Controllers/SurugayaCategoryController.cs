@@ -26,7 +26,7 @@ public class SurugayaCategoryController(SurugayaCategoryService service) : Contr
     /// 編輯作品名稱
     /// </summary>
     [HttpPatch("seriesName/{seriesName}")]
-    public async Task<SurugayaCategoryModel> UpdateSeriesName(string url, string seriesName)
+    public async Task<SurugayaCategoryModel> UpdateSeriesName([FromBody]string url, string seriesName)
     {
         return await service.UpdateSeriesNameAsync(url, seriesName);
     }
