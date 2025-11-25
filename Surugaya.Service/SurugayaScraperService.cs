@@ -31,7 +31,6 @@ public class SurugayaScraperService(
         product.LastUpdated = surugaya.CreatedAt;
         var dto = await detailRepo.InsertOrUpdateSurugayaAsync(product);
         var uri = new Uri(dto.Url);
-        var id = int.Parse(uri.Segments.Last());
 
         // 智能匹配作品名稱
         var seriesName = SeriesNameMapper.GetSeriesName(dto.Title);
@@ -40,7 +39,7 @@ public class SurugayaScraperService(
         {
             try
             {
-                await categoryRepository.UpsertSeriesNameAsync(id, seriesName);
+                await categoryRepository.UpsertSeriesNameAsync(url, seriesName);
                 Console.WriteLine($"✓ 已更新作品名稱: {dto.Title} -> {seriesName}");
             }
             catch (Exception ex)
