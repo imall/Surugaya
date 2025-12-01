@@ -6,6 +6,8 @@ using Surugaya.API.Settings;
 using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using Surugaya.API.Jobs;
+using Surugaya.Service;
+using Surugaya.Common.Models;
 
 namespace Surugaya.API.DependencyInjection;
 
@@ -174,5 +176,27 @@ public static class DependencyInjection
         }
 
         return app;
+    }
+
+    /// <summary>
+    /// 新增樂淘相關服務
+    /// </summary>
+    public static IServiceCollection AddLetaoServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        // 註冊設定為 Singleton（從環境變數或 appsettings.json 讀取）
+        services.AddSingleton(sp =>
+        {
+            var settings = new LetaoSettings();
+            configuration.GetSection("LetaoSettings").Bind(settings);
+            return settings;
+        });
+
+        // 註冊服務
+        services.AddSingleton<LetaoAuthService>();
+        services.AddScoped<LetaoCartService>();
+
+        return services;
     }
 }
