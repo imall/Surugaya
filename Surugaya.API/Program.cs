@@ -91,6 +91,8 @@ builder.Services.AddScoped<SurugayaScraperService>();
 builder.Services.AddScoped<SurugayaDetailsService>();
 builder.Services.AddScoped<SurugayaCategoryService>();
 builder.Services.AddScoped<SurugayaCategoryRepository>();
+builder.Services.AddScoped<SurugayaPurchaseService>();
+builder.Services.AddScoped<SurugayaPurchaseRepository>();
 builder.Services.AddScoped<HealthCheckJobService>();
 builder.Services.AddScoped<SurugayaScraperJob>();
 
