@@ -1,4 +1,4 @@
-namespace Surugaya.API.Configuration;
+namespace Surugaya.Common.Models;
 
 /// <summary>
 /// 樂淘帳號設定

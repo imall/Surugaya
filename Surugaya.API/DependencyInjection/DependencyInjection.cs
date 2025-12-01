@@ -165,7 +165,7 @@ public static class DependencyInjection
                 IgnoreAntiforgeryToken = true
             };
 
-            
+
             app.RegisterRecurringJobs();
             app.UseHangfireDashboard(pathMatch, options);
             Console.WriteLine($"✓ Hangfire Dashboard 已啟用，路徑: {pathMatch}");
@@ -194,7 +194,7 @@ public static class DependencyInjection
         });
 
         // 註冊服務
-        services.AddSingleton<LetaoAuthService>();
+        services.AddScoped<LetaoAuthService>();
         services.AddScoped<LetaoCartService>();
 
         return services;
