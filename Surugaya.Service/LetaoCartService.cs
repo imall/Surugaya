@@ -158,17 +158,6 @@ public class LetaoCartService(
                 if (!success)
                 {
                     logger.LogWarning("API 回傳失敗，Code: {Code}, Message: {Message}", apiResponse.Code, message);
-
-                    // 記錄購物車數量資訊
-                    if (!string.IsNullOrEmpty(apiResponse.CartNum))
-                    {
-                        logger.LogInformation("目前購物車商品數: {CartNum}", apiResponse.CartNum);
-                    }
-
-                    if (!string.IsNullOrEmpty(apiResponse.CartHostNum))
-                    {
-                        logger.LogInformation("賣家購物車商品數: {CartHostNum}", apiResponse.CartHostNum);
-                    }
                 }
                 else
                 {

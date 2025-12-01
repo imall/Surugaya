@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace Surugaya.Common.Models;
 
 /// <summary>
@@ -14,14 +16,4 @@ public class LetaoApiResponse
   /// 回應訊息
   /// </summary>
   public string Message { get; set; } = string.Empty;
-
-  /// <summary>
-  /// 購物車商品數量
-  /// </summary>
-  public string? CartNum { get; set; }
-
-  /// <summary>
-  /// 賣家購物車商品數量
-  /// </summary>
-  public string? CartHostNum { get; set; }
 }
