@@ -113,7 +113,15 @@ public class LetaoCartController : ControllerBase
       _logger.LogInformation("批次處理完成：總數 {Total}，成功 {Success}，失敗 {Failed}",
           response.TotalCount, response.SuccessCount, response.FailedCount);
 
-      return Ok(response);
+      // 如果有任何失敗，回傳 BadRequest (400)，否則回傳 Ok (200)
+      if (response.AllSuccess)
+      {
+        return Ok(response);
+      }
+      else
+      {
+        return BadRequest(response);
+      }
     }
     catch (Exception ex)
     {
