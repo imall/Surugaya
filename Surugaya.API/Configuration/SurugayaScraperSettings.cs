@@ -12,9 +12,9 @@ public class SurugayaScraperSettings
 
     /// <summary>
     /// Cron 表達式 (用於 Hangfire)
-    /// 預設為每天 12:00 開始,每 6 小時執行一次 (12:00, 18:00, 00:00, 06:00)
+    /// 預設為每 6 小時執行一次，從 12:03 開始 (12:03, 18:03, 00:03, 06:03)
     /// </summary>
-    public string CronExpression { get; set; } = "0 0/6 * * *";
+    public string CronExpression { get; set; } = "3 0/6 * * *";
 
     /// <summary>
     /// 執行超時時間 (分鐘)
