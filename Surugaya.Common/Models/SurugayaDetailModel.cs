@@ -19,4 +19,7 @@ public class SurugayaDetailModel
     public string PurposeCategory { get; set; }
     
     public string? SeriesName { get; set; }
+    
+    // 購買紀錄
+    public List<PurchaseHistoryItem> PurchaseHistory { get; set; } = [];
 }

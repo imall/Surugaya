@@ -21,6 +21,21 @@ public class AddPurchaseRequest
   public string? Note { get; set; }
 }
 
+/// <summary>
+/// 更新購買紀錄請求
+/// </summary>
+public class UpdatePurchaseRequest
+{
+  /// <summary>
+  /// 購買日期 (選填,不傳入則不更新)
+  /// </summary>
+  public DateTime? Date { get; set; }
+
+  /// <summary>
+  /// 備註 (選填,不傳入則不更新)
+  /// </summary>
+  public string? Note { get; set; }
+}
 
 /// <summary>
 /// 購買歷史項目

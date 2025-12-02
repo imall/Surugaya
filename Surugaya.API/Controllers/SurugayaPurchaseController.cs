@@ -79,9 +79,9 @@ public class SurugayaPurchaseController : ControllerBase
         {
             return BadRequest(new { success = false, message = "商品 URL 為必填欄位" });
         }
-        
+
         var result = await _purchaseService.GetPurchaseByUrlAsync(url);
-        
+
         return Ok(result);
     }
 
@@ -116,6 +116,52 @@ public class SurugayaPurchaseController : ControllerBase
             {
                 success = false,
                 message = $"刪除購買紀錄時發生未預期的錯誤：{ex.Message}"
+            });
+        }
+    }
+
+    /// <summary>
+    /// 更新購買紀錄 (支援部分更新)
+    /// </summary>
+    /// <param name="id">購買紀錄 ID</param>
+    /// <param name="request">更新購買紀錄請求</param>
+    /// <returns>更新後的購買紀錄</returns>
+    /// <remarks>
+    /// 支援部分更新:
+    /// - 只傳入 note: 只更新備註,日期不變
+    /// - 只傳入 date: 只更新日期,備註不變
+    /// - 兩者都傳入: 同時更新日期和備註
+    /// - note 傳入 null: 清空備註
+    /// </remarks>
+    [HttpPut("{id:long}")]
+    [ProducesResponseType(typeof(PurchaseHistoryItem), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdatePurchase(long id, [FromBody] UpdatePurchaseRequest request)
+    {
+        try
+        {
+            _logger.LogInformation("收到更新購買紀錄請求：ID={Id}, Date={Date}, Note={Note}",
+                id, request.Date, request.Note);
+
+            var result = await _purchaseService.UpdatePurchaseByIdAsync(id, request);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "更新購買紀錄時發生錯誤");
+
+            if (ex.Message.Contains("找不到"))
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+
+            return StatusCode(500, new
+            {
+                success = false,
+                message = $"更新購買紀錄時發生未預期的錯誤：{ex.Message}"
             });
         }
     }

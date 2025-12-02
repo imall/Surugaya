@@ -83,4 +83,29 @@ public class SurugayaPurchaseService(
       return false;
     }
   }
+
+  /// <summary>
+  /// 根據 ID 更新購買紀錄的日期和備註 (支援部分更新)
+  /// </summary>
+  public async Task<PurchaseHistoryItem> UpdatePurchaseByIdAsync(long id, UpdatePurchaseRequest request)
+  {
+    try
+    {
+      
+      var result = await purchaseRepository.UpdatePurchaseByIdAsync(id, request.Date, request.Note);
+
+      return new PurchaseHistoryItem
+      {
+        Id = result.Id,
+        Url = result.Url,
+        Date = result.Date,
+        Note = result.Note
+      };
+    }
+    catch (Exception ex)
+    {
+      logger.LogError(ex, "更新購買紀錄失敗：{Message}", ex.Message);
+      throw;
+    }
+  }
 }
