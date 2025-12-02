@@ -12,126 +12,59 @@ public class SurugayaPurchaseService(
   /// <summary>
   /// 新增購買紀錄
   /// </summary>
-  public async Task<PurchaseHistoryResponse> AddPurchaseAsync(AddPurchaseRequest request)
+  public async Task<PurchaseHistoryItem> AddPurchaseAsync(AddPurchaseRequest request)
   {
-    try
+    // 建立購買紀錄
+    var purchase = new SurugayaPurchaseDataModel
     {
-      // 建立購買紀錄
-      var purchase = new SurugayaPurchase
-      {
-        Url = request.Url,
-        Date = request.Date ?? DateTime.UtcNow,
-        Note = request.Note
-      };
+      Url = request.Url,
+      Date = request.Date ?? DateTime.UtcNow,
+      Note = request.Note
+    };
 
-      // 儲存到資料庫
-      var result = await purchaseRepository.InsertPurchaseAsync(purchase);
+    // 儲存到資料庫
+    var result = await purchaseRepository.InsertPurchaseAsync(purchase);
 
-      logger.LogInformation("成功新增購買紀錄：URL={Url}, Date={Date}", request.Url, purchase.Date);
+    logger.LogInformation("成功新增購買紀錄：URL={Url}, Date={Date}", request.Url, purchase.Date);
 
-      // 取得所有購買紀錄
-      var allPurchases = await purchaseRepository.GetAllPurchasesAsync();
-
-      return new PurchaseHistoryResponse
-      {
-        Success = true,
-        Message = "購買紀錄已成功新增",
-        PurchaseHistory = allPurchases.Select(p => new PurchaseHistoryItem
-        {
-          Id = p.Id,
-          Url = p.Url,
-          Date = p.Date,
-          Note = p.Note
-        })
-              .ToList()
-      };
-    }
-    catch (Exception ex)
+    return new PurchaseHistoryItem()
     {
-      logger.LogError(ex, "新增購買紀錄失敗：{Message}", ex.Message);
-      return new PurchaseHistoryResponse
-      {
-        Success = false,
-        Message = $"新增購買紀錄失敗：{ex.Message}"
-      };
-    }
+      Url = result.Url,
+      Date = result.Date,
+      Note = result.Note
+    };
   }
 
   /// <summary>
   /// 取得所有購買紀錄
   /// </summary>
-  public async Task<PurchaseHistoryResponse> GetAllPurchasesAsync()
+  public async Task<IEnumerable<PurchaseHistoryItem>> GetAllPurchasesAsync()
   {
-    try
-    {
-      var purchases = await purchaseRepository.GetAllPurchasesAsync();
+    var purchases = await purchaseRepository.GetAllPurchasesAsync();
 
-      return new PurchaseHistoryResponse
-      {
-        Success = true,
-        PurchaseHistory = purchases.Select(p => new PurchaseHistoryItem
-        {
-          Id = p.Id,
-          Url = p.Url,
-          Date = p.Date,
-          Note = p.Note
-        })
-              .ToList()
-      };
-    }
-    catch (Exception ex)
+    return purchases.Select(p => new PurchaseHistoryItem
     {
-      logger.LogError(ex, "取得購買紀錄失敗：{Message}", ex.Message);
-      return new PurchaseHistoryResponse
-      {
-        Success = false,
-        Message = $"取得購買紀錄失敗：{ex.Message}"
-      };
-    }
+      Id = p.Id,
+      Url = p.Url,
+      Date = p.Date,
+      Note = p.Note
+    });
   }
 
   /// <summary>
   /// 根據 URL 取得購買紀錄
   /// </summary>
-  public async Task<PurchaseHistoryResponse> GetPurchaseByUrlAsync(string url)
+  public async Task<IEnumerable<PurchaseHistoryItem>> GetPurchaseByUrlAsync(string url)
   {
-    try
-    {
-      var purchase = await purchaseRepository.GetPurchaseByUrlAsync(url);
+    var purchase = await purchaseRepository.GetPurchaseByUrlAsync(url);
 
-      if (purchase == null)
-      {
-        return new PurchaseHistoryResponse
-        {
-          Success = false,
-          Message = "找不到該商品的購買紀錄"
-        };
-      }
-
-      return new PurchaseHistoryResponse
-      {
-        Success = true,
-        PurchaseHistory = new List<PurchaseHistoryItem>
-                {
-                    new()
-                    {
-                        Id = purchase.Id,
-                        Url = purchase.Url,
-                        Date = purchase.Date,
-                        Note = purchase.Note
-                    }
-                }
-      };
-    }
-    catch (Exception ex)
+    return purchase.Select(p => new PurchaseHistoryItem
     {
-      logger.LogError(ex, "取得購買紀錄失敗：{Message}", ex.Message);
-      return new PurchaseHistoryResponse
-      {
-        Success = false,
-        Message = $"取得購買紀錄失敗：{ex.Message}"
-      };
-    }
+      Id = p.Id,
+      Url = p.Url,
+      Date = p.Date,
+      Note = p.Note
+    });
   }
 
   /// <summary>

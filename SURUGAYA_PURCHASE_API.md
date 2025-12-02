@@ -33,8 +33,7 @@
     {
       "url": "https://www.suruga-ya.jp/product/detail/123456",
       "date": "2024-12-01T00:00:00Z",
-      "note": "首次購入 - 初回限定版",
-      "createdAt": "2024-12-01T10:30:00Z"
+      "note": "首次購入 - 初回限定版"
     }
   ]
 }

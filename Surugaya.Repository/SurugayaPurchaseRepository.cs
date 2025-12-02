@@ -10,12 +10,12 @@ public class SurugayaPurchaseRepository(Client supabaseClient)
   /// <summary>
   /// 新增購買紀錄
   /// </summary>
-  public async Task<SurugayaPurchase> InsertPurchaseAsync(SurugayaPurchase purchase)
+  public async Task<SurugayaPurchaseDataModel> InsertPurchaseAsync(SurugayaPurchaseDataModel purchase)
   {
     try
     {
       var response = await supabaseClient
-          .From<SurugayaPurchase>()
+          .From<SurugayaPurchaseDataModel>()
           .Insert(purchase);
 
       return response.Model!;
@@ -29,12 +29,12 @@ public class SurugayaPurchaseRepository(Client supabaseClient)
   /// <summary>
   /// 取得所有購買紀錄
   /// </summary>
-  public async Task<IEnumerable<SurugayaPurchaseDataModel>> GetAllPurchasesAsync()
+  public async Task<IEnumerable<SurugayaPurchase>> GetAllPurchasesAsync()
   {
     try
     {
       var response = await supabaseClient
-          .From<SurugayaPurchaseDataModel>()
+          .From<SurugayaPurchase>()
           .Order(x => x.Date, Constants.Ordering.Descending)
           .Get();
 
@@ -49,16 +49,16 @@ public class SurugayaPurchaseRepository(Client supabaseClient)
   /// <summary>
   /// 根據 URL 取得購買紀錄
   /// </summary>
-  public async Task<SurugayaPurchaseDataModel?> GetPurchaseByUrlAsync(string url)
+  public async Task<IEnumerable<SurugayaPurchase>> GetPurchaseByUrlAsync(string url)
   {
     try
     {
       var response = await supabaseClient
-          .From<SurugayaPurchaseDataModel>()
+          .From<SurugayaPurchase>()
           .Where(x => x.Url == url)
-          .Single();
+          .Get();
 
-      return response;
+      return response.Models;
     }
     catch (Exception ex)
     {
@@ -74,7 +74,7 @@ public class SurugayaPurchaseRepository(Client supabaseClient)
     try
     {
       await supabaseClient
-          .From<SurugayaPurchaseDataModel>()
+          .From<SurugayaPurchase>()
           .Where(x => x.Id == id)
           .Delete();
     }

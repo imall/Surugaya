@@ -21,26 +21,6 @@ public class AddPurchaseRequest
   public string? Note { get; set; }
 }
 
-/// <summary>
-/// 購買紀錄回應
-/// </summary>
-public class PurchaseHistoryResponse
-{
-  /// <summary>
-  /// 是否成功
-  /// </summary>
-  public bool Success { get; set; }
-
-  /// <summary>
-  /// 訊息
-  /// </summary>
-  public string? Message { get; set; }
-
-  /// <summary>
-  /// 購買歷史紀錄
-  /// </summary>
-  public List<PurchaseHistoryItem> PurchaseHistory { get; set; } = new();
-}
 
 /// <summary>
 /// 購買歷史項目
