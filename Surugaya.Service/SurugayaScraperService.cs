@@ -33,10 +33,10 @@ public class SurugayaScraperService(
             throw new InvalidOperationException($"找不到 URL: {url}");
         }
         
-        var product = await scraper.ScrapeProductAsync(surugaya.ProductUrl);
+        var detail = await scraper.ScrapeProductAsync(surugaya.ProductUrl);
 
-        product.LastUpdated = surugaya.CreatedAt;
-        var dto = await detailRepo.InsertOrUpdateSurugayaAsync(product);
+        detail.LastUpdated = surugaya.CreatedAt;
+        var dto = await detailRepo.InsertOrUpdateSurugayaAsync(detail);
 
         // 智能匹配作品名稱
         var seriesName = await seriesNameMappingService.GetSeriesNameAsync(dto.Title);
@@ -66,7 +66,8 @@ public class SurugayaScraperService(
             CurrentPrice = dto.CurrentPrice,
             SalePrice = dto.SalePrice,
             Status = dto.Status,
-            LastUpdated = dto.LastUpdated
+            LastUpdated = dto.LastUpdated,
+            SeriesName = seriesName
         };
 
         return result;
