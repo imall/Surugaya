@@ -8,6 +8,7 @@ using Hangfire.PostgreSql;
 using Surugaya.API.Jobs;
 using Surugaya.Service;
 using Surugaya.Common.Models;
+using Surugaya.Repository;
 
 namespace Surugaya.API.DependencyInjection;
 
@@ -196,6 +197,20 @@ public static class DependencyInjection
         // 註冊服務
         services.AddScoped<LetaoAuthService>();
         services.AddScoped<LetaoCartService>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// 新增系列名稱對應相關服務
+    /// </summary>
+    public static IServiceCollection AddSeriesNameMappingServices(
+        this IServiceCollection services)
+    {
+        // 註冊 Repository
+        services.AddScoped<SeriesNameMappingRepository>();
+        
+        services.AddScoped<SeriesNameMappingService>();
 
         return services;
     }

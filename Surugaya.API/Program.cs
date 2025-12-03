@@ -79,6 +79,9 @@ builder.Services.AddHangFireServices(builder.Configuration);
 // 註冊樂淘服務
 builder.Services.AddLetaoServices(builder.Configuration);
 
+// 註冊系列名稱對應服務
+builder.Services.AddSeriesNameMappingServices();
+
 // 註冊 HttpClient
 builder.Services.AddHttpClient();
 

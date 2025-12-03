@@ -7,7 +7,7 @@ namespace Surugaya.Repository.Models;
 [Table("SurugayaPurchase")]
 public class SurugayaPurchase : BaseModel
 {
-  [PrimaryKey("id", true)]  // ✅ 改為 true，表示自動遞增
+  [PrimaryKey("id", true)]
   [Column("id")]
   public long Id { get; set; }
 

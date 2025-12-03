@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Surugaya.Common.Mapper;
 using Surugaya.Common.Models;
 using Surugaya.Repository;
 using Surugaya.Repository.Models;
@@ -15,8 +14,16 @@ public class SurugayaScraperService(
     SurugayaDetailsRepository detailRepo, 
     SurugayaCategoryRepository categoryRepository, 
     ScraperUtil scraper,
+    SeriesNameMappingService seriesNameMappingService,
     ILogger<SurugayaScraperService> logger)
 {
+    
+    /// <summary>
+    /// 透過 url 爬蟲並更新資料庫
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public async Task<SurugayaDetailModel> ScrapeProductInfoByUrl(string url)
     {
         var surugaya = await repo.GetSurugayaByUrlAsync(url);
@@ -30,10 +37,9 @@ public class SurugayaScraperService(
 
         product.LastUpdated = surugaya.CreatedAt;
         var dto = await detailRepo.InsertOrUpdateSurugayaAsync(product);
-        var uri = new Uri(dto.Url);
 
         // 智能匹配作品名稱
-        var seriesName = SeriesNameMapper.GetSeriesName(dto.Title);
+        var seriesName = await seriesNameMappingService.GetSeriesNameAsync(dto.Title);
 
         if (!string.IsNullOrEmpty(seriesName))
         {
@@ -83,7 +89,6 @@ public class SurugayaScraperService(
             try
             {
                 var message = $"[{i + 1}/{urlDatas.Length}] 正在處理...";
-                Console.WriteLine(message);
                 writeLog?.Invoke(message);
                 
                 var product = await scraper.ScrapeProductAsync(urlDatas[i].url);
@@ -91,19 +96,16 @@ public class SurugayaScraperService(
                 products.Add(product);
                 
                 var successMessage = $"✓ 完成: {product.Title}";
-                Console.WriteLine(successMessage);
                 writeLog?.Invoke(successMessage);
                 logger.LogInformation("已爬取商品 [{Index}/{Total}]: {Title}", i + 1, urlDatas.Length, product.Title);
 
                 if (i >= urlDatas.Length - 1) continue;
-
-                Console.WriteLine("等待 0.5 秒...");
-                await Task.Delay(500);
+                
+                await Task.Delay(100);
             }
             catch (Exception ex)
             {
                 var errorMessage = $"✗ 錯誤: {ex.Message}";
-                Console.WriteLine(errorMessage);
                 writeLog?.Invoke(errorMessage);
                 logger.LogError(ex, "爬取商品時發生錯誤 [{Index}/{Total}]", i + 1, urlDatas.Length);
             }
@@ -116,32 +118,31 @@ public class SurugayaScraperService(
 
         writeLog?.Invoke("開始更新作品名稱");
         logger.LogInformation("開始更新作品名稱");
-
+        
+        
         // 批量更新作品名稱
         var successCount = 0;
         var failCount = 0;
         var skipCount = 0;
-        
+        var mapping =  await seriesNameMappingService.GetAllMappingsAsync();
+        // 為了效能，先排好 key 長度順序
         foreach (var detail in detailsDto)
         {
+            var match = mapping.FirstOrDefault(x => detail.Title.Contains(x.Key));
 
-            // 智能匹配作品名稱
-            var seriesName = SeriesNameMapper.GetSeriesName(detail.Title);
-
-            if (!string.IsNullOrEmpty(seriesName))
+            if (match.Value != null)
             {
                 try
                 {
-                    await categoryRepository.UpsertSeriesNameAsync(detail.Url, seriesName);
-                    var message = $"✓ 已更新作品名稱: {detail.Title} -> {seriesName}";
-                    Console.WriteLine(message);
+                    await categoryRepository.UpsertSeriesNameAsync(detail.Url, match.Value);
+
+                    var message = $"✓ 已更新作品名稱: {detail.Title} -> {match.Value}";
                     writeLog?.Invoke(message);
                     successCount++;
                 }
                 catch (Exception ex)
                 {
                     var message = $"✗ 更新作品名稱失敗: {detail.Title} - {ex.Message}";
-                    Console.WriteLine(message);
                     writeLog?.Invoke(message);
                     logger.LogError(ex, "更新作品名稱失敗: {Title}", detail.Title);
                     failCount++;
@@ -150,7 +151,6 @@ public class SurugayaScraperService(
             else
             {
                 var message = $"⚠ 未找到匹配的作品名稱: {detail.Title}";
-                Console.WriteLine(message);
                 writeLog?.Invoke(message);
                 skipCount++;
             }
@@ -158,7 +158,6 @@ public class SurugayaScraperService(
 
         var summaryMessage = $"作品名稱更新完成 - 成功: {successCount}, 失敗: {failCount}, 跳過: {skipCount}";
         writeLog?.Invoke(summaryMessage);
-        logger.LogInformation(summaryMessage);
 
         return detailsDto.Select(x =>
         {
