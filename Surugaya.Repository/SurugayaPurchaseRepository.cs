@@ -118,7 +118,6 @@ public class SurugayaPurchaseRepository(Client supabaseClient)
   /// <param name="id">購買紀錄 ID</param>
   /// <param name="date">購買日期 (null 表示不更新)</param>
   /// <param name="note">備註 (null 表示不更新,傳入空字串可清空備註)</param>
-  /// <param name="updateNote">是否更新備註欄位</param>
   public async Task<SurugayaPurchase> UpdatePurchaseByIdAsync(long id, DateTime? date, string? note)
   {
     try
