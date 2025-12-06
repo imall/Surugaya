@@ -83,6 +83,17 @@ public class SurugayaScraperService(
 
         writeLog?.Invoke($"開始爬取 {urlDatas.Length} 個商品");
         logger.LogInformation("開始爬取 {Count} 個商品", urlDatas.Length);
+        
+        
+        // 配置爬取速度
+        var config = new ScraperConfig
+        {
+            MinDelayMs = 2000,      // 最小延遲 2 秒
+            MaxDelayMs = 5000,      // 最大延遲 5 秒
+            ErrorDelayMs = 30000,   // 錯誤後延遲 30 秒
+            BatchSize = 10,         // 每 10 個商品後休息
+            BatchDelayMs = 60000    // 批次間休息 1 分鐘
+        };
 
         // 逐一爬取每個商品
         for (var i = 0; i < urlDatas.Length; i++)
@@ -102,7 +113,21 @@ public class SurugayaScraperService(
 
                 if (i >= urlDatas.Length - 1) continue;
                 
-                await Task.Delay(100);
+                // 隨機延遲（模擬人類行為）
+                var delay = Random.Shared.Next(config.MinDelayMs, config.MaxDelayMs);
+                var delaySeconds = delay / 1000.0;
+                Console.WriteLine($"等待 {delaySeconds:F1} 秒...");
+                writeLog?.Invoke($"等待 {delaySeconds:F1} 秒...");
+                await Task.Delay(delay);
+
+                // 每處理一批商品後，休息更長時間
+                if ((i + 1) % config.BatchSize != 0) continue;
+                
+                var batchDelaySeconds = config.BatchDelayMs / 1000;
+                var batchMessage = $"已完成 {i + 1} 個商品，休息 {batchDelaySeconds} 秒...";
+                Console.WriteLine(batchMessage);
+                writeLog?.Invoke(batchMessage);
+                await Task.Delay(config.BatchDelayMs);
             }
             catch (Exception ex)
             {
@@ -176,4 +201,14 @@ public class SurugayaScraperService(
             };
         });
     }
+}
+
+
+public class ScraperConfig
+{
+    public int MinDelayMs { get; set; } = 2000;
+    public int MaxDelayMs { get; set; } = 5000;
+    public int ErrorDelayMs { get; set; } = 30000;
+    public int BatchSize { get; set; } = 10;
+    public int BatchDelayMs { get; set; } = 60000;
 }
