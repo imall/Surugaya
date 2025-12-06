@@ -4,11 +4,11 @@ using Surugaya.Repository.Models;
 
 namespace Surugaya.Service.Utils;
 
-public class ScraperUtil
+public class ScraperUtilBack
 {
     private readonly HttpClient _httpClient;
 
-    public ScraperUtil()
+    public ScraperUtilBack()
     {
         _httpClient = new HttpClient();
         // 設定 User-Agent 避免被識別為爬蟲

@@ -37,14 +37,14 @@ public static class RecurringJobsRegistrar
 
         if (scraperSettings.Enabled)
         {
-            // recurringJobManager.AddOrUpdate<SurugayaScraperJob>(
-            //     recurringJobId: "爬蟲任務",
-            //     methodCall: service => service.ExecuteAsync(null),
-            //     cronExpression: scraperSettings.CronExpression,
-            //     options: new RecurringJobOptions
-            //     {
-            //         TimeZone = japanTimeZone
-            //     });
+            recurringJobManager.AddOrUpdate<SurugayaScraperJob>(
+                recurringJobId: "爬蟲任務",
+                methodCall: service => service.ExecuteAsync(null),
+                cronExpression: scraperSettings.CronExpression,
+                options: new RecurringJobOptions
+                {
+                    TimeZone = japanTimeZone
+                });
 
             Console.WriteLine($"✓ 駿河屋爬蟲任務已註冊，執行排程: {scraperSettings.CronExpression}");
         }
